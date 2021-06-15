@@ -1,9 +1,11 @@
 import React, { ReactNode } from 'react';
-import { TouchableHighlight } from 'react-native';
+import { PressableAndroidRippleConfig, Rect } from 'react-native';
 // import UnstyledIcon from '@mdi/react';
 // import { mdiLoading } from '@mdi/js';
 import styled, { StyledComponentBase } from 'styled-components/native';
 import { darken } from 'polished';
+
+import { isIos } from '../../utils/platform';
 
 import timings from '../../enums/timings';
 import { useTheme } from '../../context';
@@ -51,7 +53,8 @@ export type ButtonProps = {
   type?: ButtonTypes;
   color?: string;
   feedbackType?: FeedbackTypes;
-  // interactionFeedbackProps?: Omit<InteractionFeedbackProps, 'children'>;
+  hitSlop?: Rect | number;
+  android_ripple?: PressableAndroidRippleConfig;
   disabled?: boolean;
   onPress: (...args: any[]) => void;
   onMouseDown?: (e: React.MouseEvent) => void;
@@ -76,29 +79,16 @@ export const ButtonContainer: string & StyledComponentBase<any, {}, ButtonContai
       display: flex;
       position: relative;
       font-size: 14px;
-      padding: .75em 1em;
-      border-radius: 8px;
+      padding: 14px 16px;
+      border-radius: 4px;
       ${getShadowStyle(elevation, '#000000')}
       /* border: ${variant === variants.outline ? `1px solid ${color || '#121212'}` : '0 none;'}; */
       border-width: 0px;
-      background-color: #880000;
+      background-color: #880000 !important;
       align-items: center;
       ${disabled ? disabledStyles() : ''}
       &:hover {
         background-color: darkred;
-      }
-      ${
-        /* feedbackType === FeedbackTypes.simple
-          ? `
-            &:active {
-              background-color: ${
-                backgroundColor !== 'transparent'
-                  ? darken(0.1, backgroundColor)
-                  : 'rgba(0, 0, 0, 0.1)'
-              };
-            }
-          `
-          : */ ''
       }
     `;
   }}
@@ -114,18 +104,6 @@ export const ButtonContainer: string & StyledComponentBase<any, {}, ButtonContai
 /* const IconContainer = styled(Div)`
   height: 1rem;
   vertical-align: middle;
-`; */
-
-/* const StyledFeedbackContainer = styled(InteractionFeedback.Container)`
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  left: 0;
-  top: 0;
-`; */
-
-/* const StyledFeedbackSVGContainer = styled(InteractionFeedback.SVGContainer)`
-  border-radius: 0.25em;
 `; */
 
 /* const LeftIconContainer = styled(IconContainer)`
@@ -151,9 +129,9 @@ const Button = ({
   isProcessing,
   children,
   elevation = 0,
-  feedbackType = FeedbackTypes.ripple,
-  // interactionFeedbackProps,
-  variant = variants.fill,
+  hitSlop = 6,
+  android_ripple = { color: '#ffffff', radius: 60 },
+  variant = isIos ? variants.text : variants.fill,
   type = ButtonTypes.button,
   color,
   disabled = false,
@@ -168,7 +146,7 @@ const Button = ({
   loadingBarRef,
 }: ButtonProps): JSX.Element | null => {
   const hasContent = Boolean(children);
-  // const { colors } = useTheme();
+  const { colors } = useTheme();
   const containerColor = color || '#eeeeee';
   // get everything we expose + anything consumer wants to send to container
   const mergedContainerProps = {
@@ -182,6 +160,8 @@ const Button = ({
     variant,
     type,
     disabled,
+    android_ripple,
+    hitSlop,
     ...containerProps,
   };
 
@@ -220,15 +200,8 @@ const Button = ({
   );
 
   return (
-    <StyledContainer title="Hello World" ref={containerRef} {...mergedContainerProps}>
-      {/* {feedbackType === FeedbackTypes.ripple && !disabled && (
-        <TouchableHighlight
-        // StyledContainer={StyledFeedbackContainer}
-        // StyledSVGContainer={StyledFeedbackSVGContainer}
-        // color={getFontColorFromVariant(variant, containerColor)}
-        // {...(interactionFeedbackProps || {})}
-        />
-      )} */}
+    <StyledContainer ref={containerRef} {...mergedContainerProps}>
+      {buttonContent}
     </StyledContainer>
   );
 };
