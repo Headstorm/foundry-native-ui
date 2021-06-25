@@ -53,7 +53,6 @@ export const disabledStyles = ({
   grayscale?: number;
   contrast?: number;
   brightness?: number;
-} = {}) => `
+} = {}) => ''; /* ` // TODO: Find another solution for creating generic disabled effect
   filter: grayscale(${grayscale}) contrast(${contrast}) brightness(${brightness});
-  pointer-events: none;
-`;
+` */

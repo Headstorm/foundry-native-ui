@@ -79,11 +79,12 @@ export const ButtonContainer: string & StyledComponentBase<any, {}, ButtonContai
       display: flex;
       position: relative;
       font-size: 14px;
-      padding: 14px 16px;
+      padding: 8px 12px;
       border-radius: 4px;
       ${getShadowStyle(elevation, '#000000')}
       /* border: ${variant === variants.outline ? `1px solid ${color || '#121212'}` : '0 none;'}; */
       border-width: 0px;
+      color: #ffffff;
       background-color: #880000 !important;
       align-items: center;
       ${disabled ? disabledStyles() : ''}
