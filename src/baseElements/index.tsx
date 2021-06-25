@@ -5,7 +5,7 @@ import { withGlobalStyle } from '../context';
 // Use these elements over native styled.xx elements, as they apply
 // sensible defaults for each element. If an element doesn't exist, add it to this block
 export const View = withGlobalStyle(styled.View``);
-export const Span = withGlobalStyle(styled.Text``);
+export const Text = withGlobalStyle(styled.Text``);
 export const Button = withGlobalStyle(styled.Pressable``); // TODO: investigate the accessibility impacts of this
 /* export const Input = withGlobalStyle(styledHtml.input``);
 export const Label = withGlobalStyle(styledHtml.label``);

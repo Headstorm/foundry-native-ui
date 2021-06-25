@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React from 'react';
 import { PressableAndroidRippleConfig, Rect } from 'react-native';
 // import UnstyledIcon from '@mdi/react';
 // import { mdiLoading } from '@mdi/js';
@@ -8,10 +8,10 @@ import { darken } from 'polished';
 import { isIos } from '../../utils/platform';
 
 import timings from '../../enums/timings';
-import { useTheme } from '../../context';
+import { FoundryContextType, useTheme } from '../../context';
 import variants from '../../enums/variants';
 // import Progress from '../Progress/Progress';
-import { View, Button as ButtonElement } from '../../baseElements';
+import { View, Button as ButtonElement, Text } from '../../baseElements';
 import {
   getFontColorFromVariant,
   getBackgroundColorFromVariant,
@@ -24,6 +24,7 @@ import { getShadowStyle } from '../../utils/styles';
 import FeedbackTypes from '../../enums/feedbackTypes';
 
 export type ButtonContainerProps = {
+  theme: FoundryContextType;
   elevation: number;
   color: string;
   variant: variants;
@@ -70,10 +71,10 @@ export type ButtonProps = {
 export const ButtonContainer: string & StyledComponentBase<any, {}, ButtonContainerProps> = styled(
   ButtonElement,
 )`
-  ${({ disabled, elevation = 0, color, variant, feedbackType }: ButtonContainerProps) => {
-    // const { colors } = useTheme();
-    // const backgroundColor = getBackgroundColorFromVariant(variant, color, colors.transparent);
-    // const fontColor = getFontColorFromVariant(variant, color, colors.background, colors.grayDark);
+  ${({ theme, disabled, elevation = 0, color, variant, feedbackType }: ButtonContainerProps) => {
+    const { colors } = theme;
+    const backgroundColor = getBackgroundColorFromVariant(variant, color, colors.transparent);
+    const fontColor = getFontColorFromVariant(variant, color, colors.background, colors.grayDark);
 
     return `
       display: flex;
@@ -82,10 +83,10 @@ export const ButtonContainer: string & StyledComponentBase<any, {}, ButtonContai
       padding: 8px 12px;
       border-radius: 4px;
       ${getShadowStyle(elevation, '#000000')}
-      /* border: ${variant === variants.outline ? `1px solid ${color || '#121212'}` : '0 none;'}; */
+      border: ${variant === variants.outline ? `1px solid ${color || '#121212'}` : '0'};
       border-width: 0px;
-      color: #ffffff;
-      background-color: #880000 !important;
+      color: ${fontColor};
+      background-color: ${backgroundColor} !important;
       align-items: center;
       ${disabled ? disabledStyles() : ''}
       &:hover {
@@ -131,7 +132,7 @@ const Button = ({
   children,
   elevation = 0,
   hitSlop = 6,
-  android_ripple = { color: '#ffffff', radius: 60 },
+  android_ripple,
   variant = isIos ? variants.text : variants.fill,
   type = ButtonTypes.button,
   color,
@@ -147,8 +148,21 @@ const Button = ({
   loadingBarRef,
 }: ButtonProps): JSX.Element | null => {
   const hasContent = Boolean(children);
-  const { colors } = useTheme();
+  // TODO: fix hooks breaking in subcomponent styles to avoid passing the theme as a prop to every subcomponent
+  const theme = useTheme();
   const containerColor = color || '#eeeeee';
+  const fontColor = getFontColorFromVariant(
+    variant,
+    containerColor,
+    theme.colors.background,
+    theme.colors.grayDark,
+  );
+  const rippleConfig = {
+    color: fontColor,
+    radius: 60,
+    ...android_ripple,
+  };
+
   // get everything we expose + anything consumer wants to send to container
   const mergedContainerProps = {
     'data-test-id': 'hsui-button',
@@ -161,8 +175,9 @@ const Button = ({
     variant,
     type,
     disabled,
-    android_ripple,
+    android_ripple: rippleConfig,
     hitSlop,
+    theme,
     ...containerProps,
   };
 
@@ -185,8 +200,8 @@ const Button = ({
           <UnstyledIcon path={mdiLoading} size="1rem" spin={1} />
         </StyledLeftIconContainer>
       )} */}
-      {children}
-
+      {/* // TODO: make Text an exported subcomponent */}
+      <Text style={{ color: fontColor }}>{children}</Text>
       {/* {iconSuffix &&
         (typeof iconSuffix === 'string' ? (
           <StyledRightIconContainer hasContent={hasContent} ref={rightIconContainerRef}>
