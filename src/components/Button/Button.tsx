@@ -6,6 +6,7 @@ import styled, { StyledComponentBase } from 'styled-components/native';
 import { darken } from 'polished';
 
 import { isIos } from '../../utils/platform';
+import { remToPx } from '../../utils/styles';
 
 import timings from '../../enums/timings';
 import { FoundryContextType, useTheme } from '../../context';
@@ -72,16 +73,16 @@ export const ButtonContainer: string & StyledComponentBase<any, {}, ButtonContai
   ButtonElement,
 )`
   ${({ theme, disabled, elevation = 0, color, variant, feedbackType }: ButtonContainerProps) => {
-    const { colors } = theme;
+    const { colors, scale } = theme;
     const backgroundColor = getBackgroundColorFromVariant(variant, color, colors.transparent);
     const fontColor = getFontColorFromVariant(variant, color, colors.background, colors.grayDark);
 
     return `
       display: flex;
       position: relative;
-      font-size: 14px;
-      padding: 8px 12px;
-      border-radius: 4px;
+      font-size: ${remToPx(1, scale)}px;
+      padding: ${remToPx(0.75, scale)}px ${remToPx(1, scale)}px;
+      border-radius: ${remToPx(0.25, scale)}px;
       ${getShadowStyle(elevation, '#000000')}
       border: ${variant === variants.outline ? `1px solid ${color || '#121212'}` : '0'};
       border-width: 0px;

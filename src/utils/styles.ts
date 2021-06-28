@@ -1,6 +1,8 @@
 import { parseToRgb } from 'polished';
 import variants from '../enums/variants';
 import { getFontColorFromVariant } from './color';
+import Layout, { baselineWidth, defaultFontSize } from '../../constants/Layout'
+
 // A constant factor that works well with base 10 logarithms
 const elevationFactor = 10 ** 0.1;
 
@@ -127,4 +129,18 @@ export const getDropdownTagStyle = (
     margin-right: .25rem;
     margin-top: 1px;
   `;
+};
+
+
+// TODO: incorporate separate font size util using user preferences
+/**
+ * Converts a rem value to pixels for the device the user is on
+ * @param {number} size - The rem value to get pixels for
+ * @param {number} [factor = 1] - The factor to scale by
+ * @returns {number} The scaled px value 
+ */
+ export const remToPx = (size: number, factor = 1) => {
+  if (!size) return 0
+  
+  return defaultFontSize * (size + (factor * ((Layout.window.width / baselineWidth * size) - size)))
 };
