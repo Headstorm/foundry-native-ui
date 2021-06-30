@@ -5,7 +5,7 @@ import { Button, View } from '../../baseElements';
 import { SubcomponentPropsType } from '../commonTypes';
 import { FoundryContextType, useTheme } from '../../context';
 
-import { remToPx } from '../../utils/styles';
+import { remToPx, getShadowStyle } from '../../utils/styles';
 
 import FeedbackTypes from '../../enums/feedbackTypes';
 
@@ -28,6 +28,7 @@ export const CardContainer = styled(Button)`
       font-size: ${remToPx(1, scale)}px;
       border-radius: ${remToPx(0.25, scale)}px;
       border: ${!elevation ? `1px solid ${colors.grayXlight}` : '0px solid transparent'};
+      ${getShadowStyle(elevation, colors.shadow)};
       background-color: ${colors.background};
   `;
   }}
