@@ -10,7 +10,7 @@ import { remToPx } from '../../../src/utils/styles';
 
 import colors from '../../../src/enums/colors';
 
-import { View } from '../../../src/baseElements';
+import { View, Text, Button } from '../../../src/baseElements';
 
 import CenterView from '../CenterView';
 
@@ -43,28 +43,27 @@ storiesOf('Card', module)
       primary: 'purple',
     };
 
-    const ThemedContainer = styled.View`
-      ${({ elevation = 0 }) => `
-        border-radius: ${remToPx(1)}px;
-        background-color: ${themeColors.background};
+    const ThemedContainer = styled(Button)`
+      border-radius: ${remToPx(1)}px;
+      background-color: ${themeColors.background};
+      border: 1px solid ${themeColors.primary};
+    `;
 
-        transform: scale(${elevation * 0.05 + 1});
-
-        font-size: ${remToPx(1)}px;
-        border: 1px solid ${themeColors.primary};
-      `}
+    const ThemedBodyText = styled(Text)`
+      font-size: ${remToPx(1)}px;
     `;
 
     const ThemedHeader = styled(View)`
-      line-height: 0;
-      font-size: ${remToPx(4)}px;
-      padding-top: ${remToPx(2.5)}px;
       padding-left: ${remToPx(0.75)}px;
-      padding-bottom: ${remToPx(1)}px;
+    `;
+
+    const ThemedHeaderText = styled(Text)`
+      font-size: ${remToPx(4)}px;
       color: ${themeColors.primary};
     `;
 
     const ThemedFooter = styled(View)`
+      padding: ${remToPx(1)}px ${remToPx(1.5)}px;
       border-style: solid;
       border-top-width: 1px;
       border-top-color: ${themeColors.primary};
@@ -75,7 +74,7 @@ storiesOf('Card', module)
         StyledContainer={ThemedContainer}
         StyledHeader={ThemedHeader}
         StyledFooter={ThemedFooter}
-        header={text('card-themed-header', 'Card title')}
+        header={<ThemedHeaderText>{text('card-themed-header', 'Card title')}</ThemedHeaderText>}
         footer={text(
           'card-themed-footer',
           'Actionable buttons, whatever other stuff you want to pass in!',
@@ -83,10 +82,12 @@ storiesOf('Card', module)
         elevation={number('elevation', 0, { range: true, min: -5, max: 5, step: 1 })}
         onPress={action('onPress')}
       >
-        {text(
-          'card-themed-children',
-          'A Hello, World! program generally is a computer program that outputs or displays the message Hello, World!.',
-        )}
+        <ThemedBodyText>
+          {text(
+            'card-themed-children',
+            'A Hello, World! program generally is a computer program that outputs or displays the message Hello, World!.',
+          )}
+        </ThemedBodyText>
       </Card>
     );
   })
