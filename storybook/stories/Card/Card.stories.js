@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text } from 'react-native';
+
 import { action } from '@storybook/addon-actions';
 import { boolean, text, number } from '@storybook/addon-knobs';
 import { storiesOf } from '@storybook/react-native';
@@ -21,21 +21,18 @@ storiesOf('Card', module)
   .add('Default', () => {
     return (
       <Card
-        header={<Text>{text('card-header', 'Card title')}</Text>}
-        footer={
-          <Text>
-            {text('card-footer', 'Actionable buttons, whatever other stuff you want to pass in!')}
-          </Text>
-        }
+        header={text('card-header', 'Card title')}
+        footer={text(
+          'card-footer',
+          'Actionable buttons, whatever other stuff you want to pass in!',
+        )}
         elevation={number('elevation', 2, { range: true, min: -5, max: 5, step: 1 })}
         onPress={boolean('onPress', true) ? action('onPress') : undefined}
       >
-        <Text>
-          {text(
-            'card-children',
-            'A Hello, World! program generally is a computer program that outputs or displays the message Hello, World!.',
-          )}
-        </Text>
+        {text(
+          'card-children',
+          'A Hello, World! program generally is a computer program that outputs or displays the message Hello, World!.',
+        )}
       </Card>
     );
   })
@@ -78,24 +75,18 @@ storiesOf('Card', module)
         StyledContainer={ThemedContainer}
         StyledHeader={ThemedHeader}
         StyledFooter={ThemedFooter}
-        header={<Text>{text('card-themed-header', 'Card title')}</Text>}
-        footer={
-          <Text>
-            {text(
-              'card-themed-footer',
-              'Actionable buttons, whatever other stuff you want to pass in!',
-            )}
-          </Text>
-        }
+        header={text('card-themed-header', 'Card title')}
+        footer={text(
+          'card-themed-footer',
+          'Actionable buttons, whatever other stuff you want to pass in!',
+        )}
         elevation={number('elevation', 0, { range: true, min: -5, max: 5, step: 1 })}
         onPress={action('onPress')}
       >
-        <Text>
-          {text(
-            'card-themed-children',
-            'A Hello, World! program generally is a computer program that outputs or displays the message Hello, World!.',
-          )}
-        </Text>
+        {text(
+          'card-themed-children',
+          'A Hello, World! program generally is a computer program that outputs or displays the message Hello, World!.',
+        )}
       </Card>
     );
   })
@@ -117,15 +108,11 @@ storiesOf('Card', module)
     };
     return (
       <Card
-        header={<Text>{text('card-ref-header', 'View the Actions tab below')}</Text>}
-        footer={
-          <Text>
-            {text(
-              'card-ref-footer',
-              'Try adjusting the width of the viewport. New clicks will return the updated dimensions for each element.',
-            )}
-          </Text>
-        }
+        header={text('card-ref-header', 'View the Actions tab below')}
+        footer={text(
+          'card-ref-footer',
+          'Try adjusting the width of the viewport. New clicks will return the updated dimensions for each element.',
+        )}
         elevation={number('elevation', 2, { range: true, min: -5, max: 5, step: 1 })}
         onPress={boolean('onPress', true) ? e => onPress(e) : undefined}
         containerRef={cardContainerRef}
@@ -134,12 +121,10 @@ storiesOf('Card', module)
         footerRef={cardFooterRef}
         interactiveFeedbackRef={interactiveFeedbackRef}
       >
-        <Text>
-          {text(
-            'card-ref-children',
-            'Then click anywhere on the Card to see the width/height of the child elements calculated via the Ref props!',
-          )}
-        </Text>
+        {text(
+          'card-ref-children',
+          'Then click anywhere on the Card to see the width/height of the child elements calculated via the Ref props!',
+        )}
       </Card>
     );
   });

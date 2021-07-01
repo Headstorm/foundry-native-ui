@@ -3,7 +3,7 @@ import { Rect, PressableAndroidRippleConfig, LayoutChangeEvent } from 'react-nat
 
 import styled, { StyledComponentBase } from 'styled-components';
 
-import { Button, View } from '../../baseElements';
+import { Button, Text, View } from '../../baseElements';
 import { SubcomponentPropsType } from '../commonTypes';
 import { FoundryContextType, useTheme } from '../../context';
 
@@ -37,7 +37,7 @@ export const CardContainer = styled(Button)`
 
 export const Header = styled(View)`
   ${({ hasBody, hasFooter, theme }) => {
-    const { colors, scale } = theme;
+    const { scale } = theme;
 
     return `
       padding: ${remToPx(1.5, scale)}px ${remToPx(1.5, scale)}px ${
@@ -47,9 +47,18 @@ export const Header = styled(View)`
       border-top-right-radius: ${remToPx(0.25, scale)}px;
       border-bottom-right-radius: ${remToPx(0, scale)}px;
       border-bottom-left-radius: ${remToPx(0, scale)}px;
-      font-weight: bold;
-      color: ${colors.grayDark};
     `;
+  }}
+`;
+
+export const HeaderText = styled(Text)`
+  ${({ theme }) => {
+    const { colors } = theme;
+
+    return `
+    font-weight: bold;
+    color: ${colors.grayDark};
+  `;
   }}
 `;
 
@@ -60,18 +69,23 @@ export const NoPaddingHeader = styled(Header)`
 
 export const Body = styled(View)`
   ${({ theme }) => {
-    const { colors, scale } = theme;
+    const { scale } = theme;
 
-    return `
-      padding: ${remToPx(1.5, scale)}px ${remToPx(1.5, scale)}px;
-      color: ${colors.grayMedium};
-    `;
+    return `padding: ${remToPx(1.5, scale)}px ${remToPx(1.5, scale)}px;`;
+  }}
+`;
+
+export const BodyText = styled(Text)`
+  ${({ theme }) => {
+    const { colors } = theme;
+
+    return `color: ${colors.grayMedium};`;
   }}
 `;
 
 export const Footer = styled(View)`
   ${({ theme }) => {
-    const { colors, scale } = theme;
+    const { scale } = theme;
 
     return `
       padding: ${remToPx(1, scale)}px ${remToPx(1.5, scale)}px;
@@ -80,13 +94,19 @@ export const Footer = styled(View)`
 
       justify-content: flex-end;
 
-      color: ${colors.grayLight};
-
       border-top-left-radius: ${remToPx(0, scale)}px;
       border-top-right-radius: ${remToPx(0, scale)}px;
       border-bottom-right-radius: ${remToPx(0.25, scale)}px;
       border-bottom-left-radius: ${remToPx(0.25, scale)}px;
     `;
+  }}
+`;
+
+export const FooterText = styled(Text)`
+  ${({ theme }) => {
+    const { colors } = theme;
+
+    return `color: ${colors.grayLight};`;
   }}
 `;
 
@@ -187,7 +207,7 @@ const Card = ({
           theme={theme}
           {...headerProps}
         >
-          {header}
+          {typeof header === 'string' ? <HeaderText theme={theme}>{header}</HeaderText> : header}
         </StyledHeader>
       )}
       {children && (
@@ -198,7 +218,7 @@ const Card = ({
           theme={theme}
           {...bodyProps}
         >
-          {children}
+          {typeof children === 'string' ? <BodyText theme={theme}>{children}</BodyText> : children}
         </StyledBody>
       )}
       {footer && (
@@ -209,7 +229,7 @@ const Card = ({
           theme={theme}
           {...footerProps}
         >
-          {footer}
+          {typeof footer === 'string' ? <FooterText theme={theme}>{footer}</FooterText> : footer}
         </StyledFooter>
       )}
     </StyledContainer>
