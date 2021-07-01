@@ -22,10 +22,10 @@ storiesOf('Card', module)
   .add('Default', () => {
     return (
       <Card
-        header={<Text>{text('header', 'Card title')}</Text>}
+        header={<Text>{text('card-header', 'Card title')}</Text>}
         footer={
           <Text>
-            {text('footer', 'Actionable buttons, whatever other stuff you want to pass in!')}
+            {text('card-footer', 'Actionable buttons, whatever other stuff you want to pass in!')}
           </Text>
         }
         elevation={number('elevation', 2, { range: true, min: -5, max: 5, step: 1 })}
@@ -33,7 +33,7 @@ storiesOf('Card', module)
       >
         <Text>
           {text(
-            'children',
+            'card-children',
             'A Hello, World! program generally is a computer program that outputs or displays the message Hello, World!.',
           )}
         </Text>
@@ -84,10 +84,10 @@ storiesOf('Card', module)
         StyledContainer={ThemedContainer}
         StyledHeader={ThemedHeader}
         StyledFooter={ThemedFooter}
-        header={<Text>{text('header', 'Card title')}</Text>}
+        header={<Text>{text('card-themed-header', 'Card title')}</Text>}
         footer={
           <Text>
-            {text('footer', 'Actionable buttons, whatever other stuff you want to pass in!')}
+            {text('card-themed-footer', 'Actionable buttons, whatever other stuff you want to pass in!')}
           </Text>
         }
         elevation={number('elevation', 0, { range: true, min: -5, max: 5, step: 1 })}
@@ -95,7 +95,7 @@ storiesOf('Card', module)
       >
         <Text>
           {text(
-            'children',
+            'card-themed-children',
             'A Hello, World! program generally is a computer program that outputs or displays the message Hello, World!.',
           )}
         </Text>
@@ -120,11 +120,11 @@ storiesOf('Card', module)
     };
     return (
       <Card
-        header={<Text>{text('header', 'View the Actions tab below')}</Text>}
+        header={<Text>{text('card-ref-header', 'View the Actions tab below')}</Text>}
         footer={
           <Text>
             {text(
-              'footer',
+              'card-ref-footer',
               'Try adjusting the width of the viewport. New clicks will return the updated dimensions for each element.',
             )}
           </Text>
@@ -139,7 +139,7 @@ storiesOf('Card', module)
       >
         <Text>
           {text(
-            'children',
+            'card-ref-children',
             'Then click anywhere on the Card to see the width/height of the child elements calculated via the Ref props!',
           )}
         </Text>
