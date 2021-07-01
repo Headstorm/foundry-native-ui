@@ -1,4 +1,6 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useState } from 'react';
+import { Rect, PressableAndroidRippleConfig, LayoutChangeEvent } from 'react-native';
+
 import styled, { StyledComponentBase } from 'styled-components';
 
 import { Button, View } from '../../baseElements';
@@ -8,6 +10,7 @@ import { FoundryContextType, useTheme } from '../../context';
 import { remToPx, getShadowStyle } from '../../utils/styles';
 
 import FeedbackTypes from '../../enums/feedbackTypes';
+import colors from '../../enums/colors';
 
 const defaultOnPress = () => {};
 
@@ -107,6 +110,8 @@ export interface CardProps {
   footer?: ReactNode;
 
   elevation?: number;
+  hitSlop?: Rect | number;
+  android_ripple?: PressableAndroidRippleConfig;
   disableFeedback?: boolean;
   feedbackType?: FeedbackTypes;
 
@@ -144,6 +149,8 @@ const Card = ({
   footer,
 
   elevation = 1,
+  hitSlop = 6,
+  android_ripple,
   feedbackType = FeedbackTypes.ripple,
 }: CardProps): JSX.Element | null => {
   const hasHeader = Boolean(header);
@@ -152,12 +159,30 @@ const Card = ({
 
   const theme = useTheme();
 
+  const [rippleRadius, setRippleRadius] = useState(100);
+
+  const handleLayoutChange = (event: LayoutChangeEvent) => {
+    const { width, height } = event.nativeEvent.layout;
+
+    setRippleRadius(Math.max(width, height) / 2);
+  };
+
+  const rippleConfig = {
+    color: colors.grayDark25,
+    radius: rippleRadius,
+    borderLess: false,
+    ...android_ripple,
+  };
+
   return (
     <StyledContainer
       onPress={onPress}
+      onLayout={handleLayoutChange}
       elevation={elevation}
       feedbackType={feedbackType}
       theme={theme}
+      android_ripple={rippleConfig}
+      hitSlop={hitSlop}
       {...containerProps}
       ref={containerRef}
     >
