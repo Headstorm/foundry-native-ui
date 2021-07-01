@@ -188,6 +188,10 @@ const Card = ({
     ...android_ripple,
   };
 
+  if (typeof hitSlop === 'number') {
+    hitSlop = { x: hitSlop, y: hitSlop };
+  }
+
   return (
     <StyledContainer
       onPress={onPress}
