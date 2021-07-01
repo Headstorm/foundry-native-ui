@@ -91,7 +91,7 @@ storiesOf('Card', module)
           </Text>
         }
         elevation={number('elevation', 0, { range: true, min: -5, max: 5, step: 1 })}
-        onClick={action('onClick')}
+        onPress={action('onPress')}
       >
         <Text>
           {text(
@@ -108,9 +108,9 @@ storiesOf('Card', module)
     const cardBodyRef = React.createRef();
     const cardFooterRef = React.createRef();
     const interactiveFeedbackRef = React.createRef();
-    const onClick = e => {
+    const onPress = e => {
       e.preventDefault();
-      action('onClick')(
+      action('onPress')(
         `container width x height: ${cardContainerRef.current?.clientWidth} x ${cardContainerRef.current?.clientHeight}
           header width x height: ${cardHeaderRef.current?.clientWidth} x ${cardHeaderRef.current?.clientHeight}
           body width x height: ${cardBodyRef.current?.clientWidth} x ${cardBodyRef.current?.clientHeight}
@@ -130,7 +130,7 @@ storiesOf('Card', module)
           </Text>
         }
         elevation={number('elevation', 2, { range: true, min: -5, max: 5, step: 1 })}
-        onClick={boolean('onClick', true) ? e => onClick(e) : undefined}
+        onPress={boolean('onPress', true) ? e => onPress(e) : undefined}
         containerRef={cardContainerRef}
         headerRef={cardHeaderRef}
         bodyRef={cardBodyRef}
