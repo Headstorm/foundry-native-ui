@@ -9,20 +9,18 @@ import { FoundryContextType, useTheme } from '../../context';
 
 import { remToPx, getShadowStyle } from '../../utils/styles';
 
-import FeedbackTypes from '../../enums/feedbackTypes';
 import colors from '../../enums/colors';
 
 const defaultOnPress = () => {};
 
 export type CardContainerProps = {
   elevation: number;
-  feedbackType: FeedbackTypes;
   onPress: (...args: any[]) => void;
   theme: FoundryContextType;
 };
 
 export const CardContainer = styled(Button)`
-  ${({ elevation, feedbackType, onPress, theme }: CardContainerProps) => {
+  ${({ elevation, theme }: CardContainerProps) => {
     const { colors, scale } = theme;
 
     return `
@@ -113,7 +111,6 @@ export interface CardProps {
   hitSlop?: Rect | number;
   android_ripple?: PressableAndroidRippleConfig;
   disableFeedback?: boolean;
-  feedbackType?: FeedbackTypes;
 
   containerRef?: React.RefObject<HTMLDivElement>;
   headerRef?: React.RefObject<HTMLDivElement>;
@@ -134,13 +131,11 @@ const Card = ({
   headerProps,
   bodyProps,
   footerProps,
-  interactionFeedbackProps,
 
   containerRef,
   headerRef,
   bodyRef,
   footerRef,
-  interactiveFeedbackRef,
 
   onPress = defaultOnPress,
 
@@ -151,7 +146,6 @@ const Card = ({
   elevation = 1,
   hitSlop = 6,
   android_ripple,
-  feedbackType = FeedbackTypes.ripple,
 }: CardProps): JSX.Element | null => {
   const hasHeader = Boolean(header);
   const hasBody = Boolean(children);
@@ -179,7 +173,6 @@ const Card = ({
       onPress={onPress}
       onLayout={handleLayoutChange}
       elevation={elevation}
-      feedbackType={feedbackType}
       theme={theme}
       android_ripple={rippleConfig}
       hitSlop={hitSlop}

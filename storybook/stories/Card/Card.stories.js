@@ -9,7 +9,6 @@ import styled from 'styled-components';
 import { remToPx } from '../../../src/utils/styles';
 
 import colors from '../../../src/enums/colors';
-import timings from '../../../src/enums/timings';
 
 import { View } from '../../../src/baseElements';
 
@@ -47,11 +46,6 @@ storiesOf('Card', module)
       primary: 'purple',
     };
 
-    const themeTimings = {
-      ...timings,
-      xSlow: '2s',
-    };
-
     const ThemedContainer = styled.View`
       ${({ elevation = 0 }) => `
         border-radius: ${remToPx(1)}px;
@@ -87,7 +81,10 @@ storiesOf('Card', module)
         header={<Text>{text('card-themed-header', 'Card title')}</Text>}
         footer={
           <Text>
-            {text('card-themed-footer', 'Actionable buttons, whatever other stuff you want to pass in!')}
+            {text(
+              'card-themed-footer',
+              'Actionable buttons, whatever other stuff you want to pass in!',
+            )}
           </Text>
         }
         elevation={number('elevation', 0, { range: true, min: -5, max: 5, step: 1 })}
