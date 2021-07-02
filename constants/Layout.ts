@@ -9,13 +9,13 @@ const pixelRatio = PixelRatio.get();
 export const baselineHeight = 680;
 export const baselineWidth = 350;
 
-export const defaultFontSize = 8 * pixelRatio
+export const defaultFontSize = 4 * pixelRatio
 
 export default {
   window: {
     width,
     height,
   },
-  pixelRatio,
+  defaultFontSize,
   isSmallDevice: width < 375,
 };

@@ -34,6 +34,13 @@ export type ButtonContainerProps = {
   feedbackType: FeedbackTypes;
 };
 
+export type TextContainerProps = {
+  theme: FoundryContextType;
+  color: string;
+  variant: variants;
+  disabled: boolean;
+};
+
 export enum ButtonTypes {
   button = 'button',
   reset = 'reset',
@@ -42,9 +49,11 @@ export enum ButtonTypes {
 
 export type ButtonProps = {
   StyledContainer?: string & StyledComponentBase<any, {}, ButtonContainerProps>;
+  StyledTextContainer?: StyledComponentBase<any, {}>;
   StyledLeftIconContainer?: StyledComponentBase<any, {}>;
   StyledRightIconContainer?: StyledComponentBase<any, {}>;
   containerProps?: SubcomponentPropsType;
+  textContainerProps?: SubcomponentPropsType;
   iconPrefix?: string | JSX.Element;
   iconSuffix?: string | JSX.Element;
   isLoading?: boolean;
@@ -64,6 +73,7 @@ export type ButtonProps = {
   LoadingBar?: string & StyledComponentBase<any, {}>;
   id?: string;
   containerRef?: React.RefObject<HTMLButtonElement>;
+  textContainerRef?: React.RefObject<HTMLFontElement>;
   leftIconContainerRef?: React.RefObject<HTMLDivElement>;
   rightIconContainerRef?: React.RefObject<HTMLDivElement>;
   loadingBarRef?: React.RefObject<HTMLDivElement>;
@@ -74,13 +84,23 @@ export const ButtonContainer: string & StyledComponentBase<any, {}, ButtonContai
 )`
   ${({ theme, disabled, elevation = 0, color, variant, feedbackType }: ButtonContainerProps) => {
     const { colors, scale } = theme;
-    const backgroundColor = getBackgroundColorFromVariant(variant, color, colors.transparent, disabled);
-    const fontColor = getFontColorFromVariant(variant, color, colors.background, colors.grayDark, disabled);
+    const backgroundColor = getBackgroundColorFromVariant(
+      variant,
+      color,
+      colors.transparent,
+      disabled,
+    );
+    const fontColor = getFontColorFromVariant(
+      variant,
+      color,
+      colors.background,
+      colors.grayDark,
+      disabled,
+    );
 
     return `
       display: flex;
       position: relative;
-      font-size: ${remToPx(1, scale)}px;
       padding: ${remToPx(0.75, scale)}px ${remToPx(1, scale)}px;
       border-radius: ${remToPx(0.25, scale)}px;
       ${getShadowStyle(elevation, '#000000')}
@@ -89,9 +109,23 @@ export const ButtonContainer: string & StyledComponentBase<any, {}, ButtonContai
       color: ${fontColor};
       background-color: ${backgroundColor} !important;
       align-items: center;
-      &:hover {
-        background-color: darkred;
-      }
+      ${disabled ? disabledStyles() : ''}
+    `;
+  }}
+`;
+
+export const TextContainer: string & StyledComponentBase<any, {}, TextContainerProps> = styled(
+  Text,
+)`
+  ${({ theme, disabled, color, variant }: TextContainerProps) => {
+    const { colors, scale } = theme;
+    const fontColor = getFontColorFromVariant(variant, color, colors.background, colors.grayDark);
+
+    return `
+      font-size: ${remToPx(1, scale)}px;
+      padding: 0px;
+      color: ${fontColor};
+      ${disabled ? disabledStyles() : ''}
     `;
   }}
 `;
@@ -122,9 +156,11 @@ const RightIconContainer = styled(IconContainer)`
 
 const Button = ({
   StyledContainer = ButtonContainer,
+  StyledTextContainer = TextContainer,
   // StyledLeftIconContainer = LeftIconContainer,
   // StyledRightIconContainer = RightIconContainer,
   containerProps = {},
+  textContainerProps = {},
   iconPrefix,
   iconSuffix,
   isLoading,
@@ -143,6 +179,7 @@ const Button = ({
   // LoadingBar = StyledProgress,
   id,
   containerRef,
+  textContainerRef,
   leftIconContainerRef,
   rightIconContainerRef,
   loadingBarRef,
@@ -181,6 +218,16 @@ const Button = ({
     ...containerProps,
   };
 
+  const mergedTextContainerProps = {
+    'data-test-id': 'hsui-button-text',
+    color: containerColor,
+    variant,
+    type,
+    disabled,
+    theme,
+    ...textContainerProps,
+  };
+
   const buttonContent = isLoading ? (
     // <LoadingBar ref={loadingBarRef} />
     <View />
@@ -200,8 +247,9 @@ const Button = ({
           <UnstyledIcon path={mdiLoading} size="1rem" spin={1} />
         </StyledLeftIconContainer>
       )} */}
-      {/* // TODO: make Text an exported subcomponent */}
-      <Text style={{ color: fontColor }}>{children}</Text>
+      <TextContainer ref={textContainerRef} {...mergedTextContainerProps}>
+        {children}
+      </TextContainer>
       {/* {iconSuffix &&
         (typeof iconSuffix === 'string' ? (
           <StyledRightIconContainer hasContent={hasContent} ref={rightIconContainerRef}>
@@ -223,6 +271,7 @@ const Button = ({
 };
 
 Button.Container = ButtonContainer;
+Button.TextContainer = TextContainer;
 Button.ButtonTypes = ButtonTypes;
 // Button.LoadingBar = StyledProgress;
 // Button.LeftIconContainer = LeftIconContainer;
