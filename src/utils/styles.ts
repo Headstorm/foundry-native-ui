@@ -139,8 +139,4 @@ export const getDropdownTagStyle = (
  * @param {number} [factor = 1] - The factor to scale by
  * @returns {number} The scaled px value 
  */
- export const remToPx = (size: number, factor = 1) => {
-  if (!size) return 0
-  
-  return defaultFontSize * (size + (factor * ((Layout.window.width / baselineWidth * size) - size)))
-};
+export const remToPx = (size: number, factor = 1) => size ? defaultFontSize * (size + (factor * ((Layout.window.width / baselineWidth * size) - size))) : 0
