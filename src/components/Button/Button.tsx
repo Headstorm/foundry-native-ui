@@ -1,5 +1,5 @@
-import React from 'react';
-import { PressableAndroidRippleConfig, Rect } from 'react-native';
+import React, { ReactNode } from 'react';
+import { CheckBox, PressableAndroidRippleConfig, Rect } from 'react-native';
 // import UnstyledIcon from '@mdi/react';
 // import { mdiLoading } from '@mdi/js';
 import styled, { StyledComponentBase } from 'styled-components/native';
@@ -18,8 +18,8 @@ import {
   getBackgroundColorFromVariant,
   disabledStyles,
 } from '../../utils/color';
-import { SubcomponentPropsType } from '../commonTypes';
-import { getShadowStyle } from '../../utils/styles';
+import { SubcomponentPropsType, SubcomponentProperties } from '../commonTypes';
+import { getShadowStyle, getTextChildren } from '../../utils/styles';
 // import InteractionFeedback from '../InteractionFeedback';
 // import { InteractionFeedbackProps } from '../InteractionFeedback/InteractionFeedback';
 import FeedbackTypes from '../../enums/feedbackTypes';
@@ -48,17 +48,15 @@ export enum ButtonTypes {
 }
 
 export type ButtonProps = {
-  StyledContainer?: string & StyledComponentBase<any, {}, ButtonContainerProps>;
-  StyledTextContainer?: StyledComponentBase<any, {}>;
+  StyledContainerComponent?: SubcomponentProperties;
+  StyledTextComponent?: SubcomponentProperties;
   StyledLeftIconContainer?: StyledComponentBase<any, {}>;
   StyledRightIconContainer?: StyledComponentBase<any, {}>;
-  containerProps?: SubcomponentPropsType;
-  textContainerProps?: SubcomponentPropsType;
   iconPrefix?: string | JSX.Element;
   iconSuffix?: string | JSX.Element;
   isLoading?: boolean;
   isProcessing?: boolean;
-  children?: string;
+  children?: ReactNode[];
   elevation?: number;
   variant?: variants;
   type?: ButtonTypes;
@@ -72,8 +70,6 @@ export type ButtonProps = {
   onMouseUp?: (e: React.MouseEvent) => void;
   LoadingBar?: string & StyledComponentBase<any, {}>;
   id?: string;
-  containerRef?: React.RefObject<HTMLButtonElement>;
-  textContainerRef?: React.RefObject<HTMLFontElement>;
   leftIconContainerRef?: React.RefObject<HTMLDivElement>;
   rightIconContainerRef?: React.RefObject<HTMLDivElement>;
   loadingBarRef?: React.RefObject<HTMLDivElement>;
@@ -155,17 +151,23 @@ const RightIconContainer = styled(IconContainer)`
 `; */
 
 const Button = ({
-  StyledContainer = ButtonContainer,
-  StyledTextContainer = TextContainer,
+  StyledContainerComponent = {
+    component: ButtonContainer,
+    ref: undefined,
+    props: {},
+  },
+  StyledTextComponent = {
+    component: TextContainer,
+    ref: undefined,
+    props: {},
+  },
   // StyledLeftIconContainer = LeftIconContainer,
   // StyledRightIconContainer = RightIconContainer,
-  containerProps = {},
-  textContainerProps = {},
   iconPrefix,
   iconSuffix,
   isLoading,
   isProcessing,
-  children,
+  children = [],
   elevation = 0,
   hitSlop = 6,
   android_ripple,
@@ -178,8 +180,6 @@ const Button = ({
   onMouseUp = () => {},
   // LoadingBar = StyledProgress,
   id,
-  containerRef,
-  textContainerRef,
   leftIconContainerRef,
   rightIconContainerRef,
   loadingBarRef,
@@ -200,6 +200,11 @@ const Button = ({
     ...android_ripple,
   };
 
+  const textChildren = getTextChildren(children);
+  // const nonTextChildren = React.Children.toArray(children).filter(child =>
+  //   !textChildren.includes(child),
+  // );
+
   // get everything we expose + anything consumer wants to send to container
   const mergedContainerProps = {
     'data-test-id': 'hsui-button',
@@ -215,7 +220,7 @@ const Button = ({
     android_ripple: rippleConfig,
     hitSlop,
     theme,
-    ...containerProps,
+    ...StyledContainerComponent.props,
   };
 
   const mergedTextContainerProps = {
@@ -225,7 +230,7 @@ const Button = ({
     type,
     disabled,
     theme,
-    ...textContainerProps,
+    ...StyledTextComponent.props,
   };
 
   const buttonContent = isLoading ? (
@@ -247,9 +252,13 @@ const Button = ({
           <UnstyledIcon path={mdiLoading} size="1rem" spin={1} />
         </StyledLeftIconContainer>
       )} */}
-      <TextContainer ref={textContainerRef} {...mergedTextContainerProps}>
-        {children}
-      </TextContainer>
+      {textChildren && (
+        <StyledTextComponent.component ref={StyledTextComponent.ref} {...mergedTextContainerProps}>
+          {textChildren}
+        </StyledTextComponent.component>
+      )}
+      {/* TODO: decide how/if we want to support them passing in a mixture text/nonText children */}
+      {/* {nonTextChildren && <View>{nonTextChildren}</View>} */}
       {/* {iconSuffix &&
         (typeof iconSuffix === 'string' ? (
           <StyledRightIconContainer hasContent={hasContent} ref={rightIconContainerRef}>
@@ -264,9 +273,12 @@ const Button = ({
   );
 
   return (
-    <StyledContainer ref={containerRef} {...mergedContainerProps}>
+    <StyledContainerComponent.component
+      ref={StyledContainerComponent.ref}
+      {...mergedContainerProps}
+    >
       {buttonContent}
-    </StyledContainer>
+    </StyledContainerComponent.component>
   );
 };
 
