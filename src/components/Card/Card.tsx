@@ -136,9 +136,6 @@ export interface CardProps {
   headerRef?: React.RefObject<HTMLDivElement>;
   bodyRef?: React.RefObject<HTMLDivElement>;
   footerRef?: React.RefObject<HTMLDivElement>;
-  interactiveFeedbackRef?: React.RefObject<HTMLDivElement>;
-
-  theme: FoundryContextType;
 }
 
 const Card = ({

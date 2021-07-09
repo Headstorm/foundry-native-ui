@@ -96,7 +96,6 @@ storiesOf('Card', module)
     const cardHeaderRef = React.createRef();
     const cardBodyRef = React.createRef();
     const cardFooterRef = React.createRef();
-    const interactiveFeedbackRef = React.createRef();
     const onPress = e => {
       e.preventDefault();
       action('onPress')(
@@ -120,7 +119,6 @@ storiesOf('Card', module)
         headerRef={cardHeaderRef}
         bodyRef={cardBodyRef}
         footerRef={cardFooterRef}
-        interactiveFeedbackRef={interactiveFeedbackRef}
       >
         {text(
           'card-ref-children',
