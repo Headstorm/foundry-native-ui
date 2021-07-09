@@ -98,12 +98,17 @@ storiesOf('Card', module)
     const cardFooterRef = React.createRef();
     const onPress = e => {
       e.preventDefault();
-      action('onPress')(
-        `container width x height: ${cardContainerRef.current?.clientWidth} x ${cardContainerRef.current?.clientHeight}
-          header width x height: ${cardHeaderRef.current?.clientWidth} x ${cardHeaderRef.current?.clientHeight}
-          body width x height: ${cardBodyRef.current?.clientWidth} x ${cardBodyRef.current?.clientHeight}
-          footer width x height: ${cardFooterRef.current?.clientWidth} x ${cardFooterRef.current?.clientHeight}
-          interactive width x height: ${interactiveFeedbackRef.current?.clientWidth} x ${interactiveFeedbackRef.current?.clientHeight}`,
+      cardContainerRef.current.measure((_fx, _fy, width, height, _px, _py) =>
+        action('onPress')(`container width x height: ${width} x ${height}`),
+      );
+      cardHeaderRef.current.measure((_fx, _fy, width, height, _px, _py) =>
+        action('onPress')(`header width x height: ${width} x ${height}`),
+      );
+      cardBodyRef.current.measure((_fx, _fy, width, height, _px, _py) =>
+        action('onPress')(`body width x height: ${width} x ${height}`),
+      );
+      cardFooterRef.current.measure((_fx, _fy, width, height, _px, _py) =>
+        action('onPress')(`footer width x height: ${width} x ${height}`),
       );
     };
     return (
