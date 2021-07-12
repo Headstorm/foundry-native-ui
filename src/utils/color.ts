@@ -18,13 +18,13 @@ export const getFontColorFromVariant = (
   darkReturnColor: string = colors.grayDark,
   disabled: boolean = false,
 ) => {
-  if (variant === 'fill' && !disabled) {
-    return readableColor(color, lightReturnColor, darkReturnColor, true);
-  }
-  else if (variant === 'fill') {
-    return readableColor(grayscale(color), grayscale(lightReturnColor), grayscale(darkReturnColor), true);
-  }
-  else if (disabled) {
+  if(variant === 'fill') {
+    if(!disabled)
+      return readableColor(color, lightReturnColor, darkReturnColor, true);
+    } else {
+      return readableColor(grayscale(color), grayscale(lightReturnColor), grayscale(darkReturnColor), true);
+    }
+  } else if (disabled) {
     return grayscale(color);
   }
   return color;
