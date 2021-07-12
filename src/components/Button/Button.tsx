@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { CheckBox, PressableAndroidRippleConfig, Rect } from 'react-native';
+import { PressableAndroidRippleConfig, Rect } from 'react-native';
 // import UnstyledIcon from '@mdi/react';
 // import { mdiLoading } from '@mdi/js';
 import styled, { StyledComponentBase } from 'styled-components/native';
