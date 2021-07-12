@@ -42,17 +42,38 @@ export const getBackgroundColorFromVariant = (
   }
 };
 
+/*
+  Converts a hex color value to grayscale using luminosity.
+*/
+const filterGrayscale = (hex: string) => {
+  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  var luminosity = 0;
+  if(result){
+      var r= parseInt(result[1], 16);
+      var g= parseInt(result[2], 16);
+      var b= parseInt(result[3], 16);
+      luminosity = Math.round(r*.3 + g*.59 + b*.11);
+  } 
+  var grayscaleColor = '#' + [luminosity, luminosity, luminosity].map(x => {
+    const hex = x.toString(16)
+    return hex.length === 1 ? '0' + hex : hex
+  }).join('')
+  // var grayscaleColor = luminosity.toString() + "," + luminosity.toString() + "," + luminosity.toString()
+  return grayscaleColor;
+}
+
 /**
- * Returns a filter for grayscale with contrast and brightness parameters.
+ * Returns styling which converts font and background colors to a grayscale disabled style. 
  */
-export const disabledStyles = ({
-  grayscale = 1,
-  contrast = 0.5,
-  brightness = 1.2,
-}: {
-  grayscale?: number;
-  contrast?: number;
-  brightness?: number;
-} = {}) => ''; /* ` // TODO: Find another solution for creating generic disabled effect
-  filter: grayscale(${grayscale}) contrast(${contrast}) brightness(${brightness});
-` */
+export const disabledStyles = (
+  fontColor: string = "#FFFFFF",
+  backgroundColor: string = colors.primaryDark,
+  borderColor: string = "#000000",
+) => {
+  return `
+  color: ${filterGrayscale(fontColor)};
+  background: ${filterGrayscale(backgroundColor)};
+  border-color: ${filterGrayscale(borderColor)};
+  box-shadow: none;
+  `
+}; 

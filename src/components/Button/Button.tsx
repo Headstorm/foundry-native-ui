@@ -89,7 +89,7 @@ export const ButtonContainer: string & StyledComponentBase<any, {}, ButtonContai
       color: ${fontColor};
       background-color: ${backgroundColor} !important;
       align-items: center;
-      ${disabled ? disabledStyles() : ''}
+      ${disabled ? disabledStyles(fontColor, backgroundColor, color) : ''}
       &:hover {
         background-color: darkred;
       }

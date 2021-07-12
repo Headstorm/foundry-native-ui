@@ -16,7 +16,7 @@ storiesOf('Button', module)
       variant={select('variant', variants, variants.fill)}
       color={color('color', colors.primaryDark)}
       onPress={action('button-press')}
-      disabled={boolean('disabled', false)}
+      disabled={boolean('disabled', true)}
     >
       <Text>{text('children', 'Default text')}</Text>
     </Button>
