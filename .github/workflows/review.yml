@@ -15,6 +15,7 @@ jobs:
           username: ${{ secrets.EXPO_CLI_USERNAME }}
           password: ${{ secrets.EXPO_CLI_PASSWORD }}
       - run: yarn install
+      - run: expo login -u ${{ secrets.EXPO_CLI_USERNAME }} -p ${{ secrets.EXPO_CLI_PASSWORD }}
       - run: expo publish --release-channel=pr-${{ github.event.number }}
       - uses: unsplash/comment-on-pr@master
         env:
