@@ -57,8 +57,8 @@ const filterGrayscale = (hex: string) => {
   var grayscaleColor = '#' + [luminosity, luminosity, luminosity].map(x => {
     const hex = x.toString(16)
     return hex.length === 1 ? '0' + hex : hex
-  }).join('')
-  // var grayscaleColor = luminosity.toString() + "," + luminosity.toString() + "," + luminosity.toString()
+  }).join('');
+
   return grayscaleColor;
 }
 
