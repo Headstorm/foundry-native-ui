@@ -19,7 +19,7 @@ export const getFontColorFromVariant = (
   disabled: boolean = false,
 ) => {
   if(variant === 'fill') {
-    if(!disabled)
+    if(!disabled) {
       return readableColor(color, lightReturnColor, darkReturnColor, true);
     } else {
       return readableColor(grayscale(color), grayscale(lightReturnColor), grayscale(darkReturnColor), true);
