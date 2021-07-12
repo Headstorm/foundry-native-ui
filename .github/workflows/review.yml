@@ -22,4 +22,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          msg: App is ready for review, you can [see it here](https://exp.host/@${{ secrets.EXPO_CLI_USERNAME }}/foundry-native-ui?release-channel=pr-${{ github.event.number }}).
+          msg: |
+            ## Preview build
+            App is ready for review, you can [see it here](https://exp.host/@${{ secrets.EXPO_CLI_USERNAME }}/foundry-native-ui?release-channel=pr-${{ github.event.number }})
+            ![Expo QR](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=exp://exp.host/${{ secrets.EXPO_CLI_USERNAME }}?release-channel=pr${{ github.event.number }})
