@@ -1,5 +1,5 @@
 name: Preview on Expo
-on: [pull_request]
+on: [pull_request_target]
 jobs:
   publish:
     name: Install and publish
