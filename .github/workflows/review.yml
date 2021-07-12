@@ -1,5 +1,5 @@
 name: Preview on Expo
-on: [pull_request]
+on: [pull_request_target]
 jobs:
   publish:
     name: Install and publish
@@ -8,21 +8,19 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
-          node-version: 16.x
-      - uses: expo/expo-github-action@v6
+          node-version: 14.x
+      - uses: expo/expo-github-action@v5
         with:
           expo-version: 4.x
-          username: ${{ secrets.EXPO_CLI_USERNAME }}
-          password: ${{ secrets.EXPO_CLI_PASSWORD }}
+          expo-username: ${{ secrets.EXPO_CLI_USERNAME }}
+          expo-password: ${{ secrets.EXPO_CLI_PASSWORD }}
+          expo-token: ${{ secrets.EXPO_TOKEN }}
+          expo-packager: yarn
       - run: yarn install
-      - run: expo login -u $EXPO_CLI_USERNAME -p $EXPO_CLI_PASSWORD
-        env:
-          EXPO_CLI_USERNAME: ${{ secrets.EXPO_CLI_USERNAME }}
-          EXPO_CLI_PASSWORD: ${{ secrets.EXPO_CLI_PASSWORD }}
-      - run: echo $EXPO_CLI_USERNAME
       - run: expo publish --release-channel=pr-${{ github.event.number }}
       - uses: unsplash/comment-on-pr@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           msg: App is ready for review, you can [see it here](https://exp.host/@${{ secrets.EXPO_CLI_USERNAME }}/foundry-native-ui?release-channel=pr-${{ github.event.number }}).
+{"mode":"full","isActive":false}
