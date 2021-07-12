@@ -1,5 +1,7 @@
 name: Preview on Expo
-on: [pull_request]
+on:
+  pull_request_target:
+    types: [assigned, opened, synchronize, reopened]
 jobs:
   publish:
     name: Install and publish
