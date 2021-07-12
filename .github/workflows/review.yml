@@ -12,11 +12,13 @@ jobs:
       - uses: expo/expo-github-action@v6
         with:
           expo-version: 4.x
-          token: ${{ secrets.EXPO_TOKEN }}
+          username: ${{ env.EXPO_CLI_USERNAME }}
+          password: ${{ env.EXPO_CLI_PASSWORD }}
       - run: yarn install
+      - run: expo login -u $EXPO_CLI_USERNAME -p $EXPO_CLI_PASSWORD
       - run: expo publish --release-channel=pr-${{ github.event.number }}
       - uses: unsplash/comment-on-pr@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          msg: App is ready for review, you can [see it here](https://exp.host/@${{ secrets.EXPO_CLI_USERNAME }}/foundry-native-ui?release-channel=pr-${{ github.event.number }}).
+          msg: App is ready for review, you can [see it here](https://exp.host/@${{ env.EXPO_CLI_USERNAME }}/foundry-native-ui?release-channel=pr-${{ github.event.number }}).
