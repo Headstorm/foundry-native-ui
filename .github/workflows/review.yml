@@ -1,5 +1,5 @@
 name: Preview on Expo
-on: [pull_request_target]
+on: [pull_request]
 jobs:
   publish:
     name: Install and publish
@@ -15,10 +15,6 @@ jobs:
           username: ${{ secrets.EXPO_CLI_USERNAME }}
           password: ${{ secrets.EXPO_CLI_PASSWORD }}
       - run: yarn install
-      - run: expo login -u $EXPO_CLI_USERNAME -p $EXPO_CLI_PASSWORD
-        env:
-          EXPO_CLI_USERNAME: ${{ secrets.EXPO_CLI_USERNAME }}
-          EXPO_CLI_PASSWORD: ${{ secrets.EXPO_CLI_PASSWORD }}
       - run: expo publish --release-channel=pr-${{ github.event.number }}
       - uses: unsplash/comment-on-pr@master
         env:
