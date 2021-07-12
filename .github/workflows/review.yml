@@ -1,5 +1,5 @@
 name: Preview on Expo
-on: [pull_request_target]
+on: [pull_request]
 jobs:
   publish:
     name: Install and publish
@@ -23,4 +23,3 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           msg: App is ready for review, you can [see it here](https://exp.host/@${{ secrets.EXPO_CLI_USERNAME }}/foundry-native-ui?release-channel=pr-${{ github.event.number }}).
-{"mode":"full","isActive":false}
