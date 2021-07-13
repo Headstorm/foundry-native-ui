@@ -18,11 +18,12 @@ jobs:
           expo-packager: yarn
       - run: yarn install
       - run: expo publish --release-channel=pr-${{ github.event.number }}
-      - uses: unsplash/comment-on-pr@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/github-script@v4
         with:
-          msg: |
-            ## Preview build
-            App is ready for review, you can [see it here](https://exp.host/@${{ secrets.EXPO_CLI_USERNAME }}/foundry-native-ui?release-channel=pr-${{ github.event.number }})
-            ![Expo QR](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=exp://exp.host/${{ secrets.EXPO_CLI_USERNAME }}?release-channel=pr${{ github.event.number }})
+          script: |
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: 'App is ready for review, you can [see it here](https://exp.host/@${{ secrets.EXPO_CLI_USERNAME }}/foundry-native-ui?release-channel=pr-${{ github.event.number }}). ![Expo QR](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=exp://exp.host/${{ secrets.EXPO_CLI_USERNAME }}?release-channel=pr${{ github.event.number }})'
+            })
