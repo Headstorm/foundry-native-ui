@@ -1,25 +1,28 @@
 import React, { ReactNode, RefObject } from 'react';
 import styled, { StyledComponentBase } from 'styled-components';
+import { View, ScrollView } from 'react-native';
 
-import Icon from '@mdi/react';
-import { mdiLoading } from '@mdi/js';
-import Progress from '../Progress/Progress';
-import { Span } from '../../htmlElements';
+// import Icon from '@mdi/react';
+// import { mdiLoading } from '@mdi/js';
+// import Progress from '../Progress/Progress';
 import { SubcomponentPropsType } from '../commonTypes';
+import { Text as Text_ } from '../../baseElements';
+import { remToPx } from '../../utils/styles';
 
 /* Default Styled Text Container */
-export const TextContainer = styled(Span)`
+export const TextContainer = styled(ScrollView)`
   ${({ size, color }: { size: string; color: string }) => `
-    font-size: ${size};
+    font-size: ${remToPx(parseInt(size))};
     color: ${color};
+    
   `}
 `;
 
 export interface TextProps {
   children?: ReactNode;
   color?: string;
-  iconPrefix?: string | JSX.Element;
-  iconSuffix?: string | JSX.Element;
+//   iconPrefix?: string | JSX.Element;
+//   iconSuffix?: string | JSX.Element;
   isLoading?: boolean;
   isProcessing?: boolean;
   size?: string;
@@ -34,14 +37,14 @@ export interface TextProps {
 }
 
 /* Styled div that represents the scroll bar */
-const StyledProgress = styled(Progress)`
+/*const StyledProgress = styled(Progress)`
   ${({ size }: { size: string }) => `
     width: calc(${size} * 10);
     height: ${size};
   `}
-`;
+`;*/
 
-const IconContainer = styled(Span)`
+const IconContainer = styled(View)`
   ${({ side }: { side: 'left' | 'right' }) => `
     margin-${side === 'left' ? 'right' : 'left'}: .5em;
     display: inline-flex;
@@ -56,8 +59,8 @@ const IconContainer = styled(Span)`
 const Text = ({
   children,
   color,
-  iconPrefix,
-  iconSuffix,
+//   iconPrefix,
+//   iconSuffix,
   isLoading,
   isProcessing,
   size = '1rem',
@@ -77,8 +80,10 @@ const Text = ({
     ref={containerRef}
     {...containerProps}
   >
-    {isLoading && <StyledProgress size={size} />}
-    {!isLoading &&
+    {/* {isLoading && <StyledProgress size={size} />} */}
+    {!isLoading && <Text_>{children}</Text_>}
+
+    {/*!isLoading &&
       !isProcessing &&
       iconPrefix &&
       (typeof iconPrefix === 'string' && iconPrefix !== '' ? (
@@ -94,15 +99,14 @@ const Text = ({
         >
           {iconPrefix}
         </StyledIconContainer>
-      ))}
-    {!isLoading && isProcessing && (
+      ))*/}
+    {/*!isLoading && isProcessing && (
       <StyledIconContainer side="left" ref={iconPrefixContainerRef} {...iconContainerProps}>
         <Icon path={mdiLoading} size={size} spin={1} />
       </StyledIconContainer>
-    )}
-    {!isLoading && children}
+    )*/}
 
-    {!isLoading &&
+    {/*!isLoading &&
       iconSuffix &&
       (typeof iconSuffix === 'string' ? (
         <StyledIconContainer side="right" ref={iconSuffixContainerRef} {...iconContainerProps}>
@@ -112,10 +116,10 @@ const Text = ({
         <StyledIconContainer side="right" ref={iconSuffixContainerRef} {...iconContainerProps}>
           {iconSuffix}
         </StyledIconContainer>
-      ))}
+      ))*/}
   </StyledContainer>
 );
 
 Text.Container = TextContainer;
-Text.IconContainer = IconContainer;
+// Text.IconContainer = IconContainer;
 export default Text;
