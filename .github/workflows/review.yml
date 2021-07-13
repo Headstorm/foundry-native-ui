@@ -18,8 +18,12 @@ jobs:
           expo-packager: yarn
       - run: yarn install
       - run: expo publish --release-channel=pr-${{ github.event.number }}
-      - uses: unsplash/comment-on-pr@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/github-script@v4
         with:
-          msg: App is ready for review, you can [see it here](https://exp.host/@${{ secrets.EXPO_CLI_USERNAME }}/foundry-native-ui?release-channel=pr-${{ github.event.number }}).
+          script: |
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: 'App is ready for review, you can [see it here](https://exp.host/@${{ secrets.EXPO_CLI_USERNAME }}/foundry-native-ui?release-channel=pr-${{ github.event.number }}).'
+            })
