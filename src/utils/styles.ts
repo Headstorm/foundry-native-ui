@@ -1,7 +1,8 @@
+import { Platform } from 'react-native';
 import { parseToRgb } from 'polished';
 import variants from '../enums/variants';
 import { getFontColorFromVariant } from './color';
-import Layout, { baselineWidth, defaultFontSize } from '../../constants/Layout'
+import Layout, { baselineWidth, defaultFontSize } from '../../constants/Layout';
 
 // A constant factor that works well with base 10 logarithms
 const elevationFactor = 10 ** 0.1;
@@ -43,6 +44,10 @@ export const calculateElevationValues = (elevation = 0) => {
     : calc() / 16;
   elevationValues.blur = isNegative ? (absVal * 2) / 16 : absVal * 0.25;
   elevationValues.opacity = /** isNegative ? 0.3 - 0.05 * absVal : */ 0.5 - logVal * 0.2;
+
+  elevationValues.xOffset = remToPx(elevationValues.xOffset);
+  elevationValues.yOffset = remToPx(elevationValues.yOffset);
+
   return elevationValues;
 };
 
@@ -57,12 +62,17 @@ export const getShadowStyle = (elevation = 0, shadowColor: string) => {
   if (elevation === 0) {
     return '';
   }
+
   const { red, green, blue } = parseToRgb(shadowColor);
+
+  if (elevation > 0 && Platform.OS === 'android') {
+    return `elevation: ${elevation}; shadow-color: rgb(${red},${green},${blue});`;
+  }
+
   const { xOffset, yOffset, blur, opacity } = calculateElevationValues(elevation);
 
-  return elevation > 0
-    ? `filter: drop-shadow(${xOffset}rem ${yOffset}rem ${blur}rem rgba(${red}, ${green}, ${blue},${opacity}));`
-    : `box-shadow: inset ${xOffset}rem ${yOffset}rem ${blur}rem rgba(${red}, ${green}, ${blue},${opacity});`;
+  // TODO: Add shadow inset when elevation < 0
+  return `box-shadow: ${xOffset}px ${yOffset}px ${blur}px rgba(${red},${green},${blue},${opacity});`;
 };
 
 /**
