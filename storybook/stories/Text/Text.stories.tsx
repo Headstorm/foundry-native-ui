@@ -7,6 +7,7 @@ import { storiesOf } from '@storybook/react-native';
 
 import Text from '../../../src/components/Text';
 import colors from '../../../src/enums/colors';
+import { View } from '../../../src/baseElements';
 
 const design = {
   type: 'figma',
@@ -20,6 +21,12 @@ const design = {
 
 storiesOf('Text', module)
   .addParameters({ component: Text })
+  .addDecorator(getStory => <View style={{
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    top: '50%',
+  }}><View>{getStory()}</View></View>)
   .add(
     'Default',
     () => {

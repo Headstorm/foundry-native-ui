@@ -12,7 +12,7 @@ import { remToPx } from '../../utils/styles';
 /* Default Styled Text Container */
 export const TextContainer = styled(ScrollView)`
   ${({ size, color }: { size: string; color: string }) => `
-    font-size: ${remToPx(parseInt(size))};
+    font-size: ${remToPx(parseInt(size))}px;
     color: ${color};
     
   `}
