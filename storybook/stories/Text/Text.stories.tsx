@@ -8,6 +8,8 @@ import { storiesOf } from '@storybook/react-native';
 import Text from '../../../src/components/Text';
 import colors from '../../../src/enums/colors';
 import { View } from '../../../src/baseElements';
+import CenterView from '../CenterView';
+import { ScrollView } from 'react-native';
 
 const design = {
   type: 'figma',
@@ -21,28 +23,25 @@ const design = {
 
 storiesOf('Text', module)
   .addParameters({ component: Text })
-  .addDecorator(getStory => <View style={{
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    top: '50%',
-  }}><View>{getStory()}</View></View>)
-  .add(
-    'Default',
+  .addDecorator(getStory => <CenterView><ScrollView
+      contentContainerStyle={{flexGrow : 1, justifyContent : 'center'}}
+    >{getStory()}</ScrollView></CenterView>)
+  .add(   
+    'Basic Text',
     () => {
     //   const getIconPath = (path: string) =>
         // path ? <Icon size={text('size', '1rem')} path={path} /> : undefined;
 
       return (
         <Text
-          size={text('size', 1)}
+          size={text('size', '1')}
           color={color2('color', colors.grayDark)}
         //   iconPrefix={getIconPath(select('iconPrefix', options, options.mdiComment))}
         //   iconSuffix={getIconPath(select('iconSuffix', options, options.mdiComment))}
           isProcessing={boolean('isProcessing', false)}
           isLoading={boolean('isLoading', false)}
         >
-          {text('children', 'Lorem ipsum dolor sit amet.')}
+          {text('children-text', 'Lorem ipsum dolor sit amet.')}
         </Text>
       );
     },

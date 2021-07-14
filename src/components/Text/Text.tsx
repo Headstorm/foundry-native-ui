@@ -1,6 +1,6 @@
 import React, { ReactNode, RefObject } from 'react';
 import styled, { StyledComponentBase } from 'styled-components';
-import { View, ScrollView } from 'react-native';
+import { View } from '../../../src/baseElements';
 
 // import Icon from '@mdi/react';
 // import { mdiLoading } from '@mdi/js';
@@ -10,11 +10,10 @@ import { Text as Text_ } from '../../baseElements';
 import { remToPx } from '../../utils/styles';
 
 /* Default Styled Text Container */
-export const TextContainer = styled(ScrollView)`
+export const TextContainer = styled(View)`
   ${({ size, color }: { size: string; color: string }) => `
     font-size: ${remToPx(parseInt(size))}px;
     color: ${color};
-    
   `}
 `;
 
@@ -44,13 +43,13 @@ export interface TextProps {
   `}
 `;*/
 
-const IconContainer = styled(View)`
-  ${({ side }: { side: 'left' | 'right' }) => `
-    margin-${side === 'left' ? 'right' : 'left'}: .5em;
-    display: inline-flex;
-    vertical-align: middle;
-  `}
-`;
+// const IconContainer = styled(View)`
+//   ${({ side }: { side: 'left' | 'right' }) => `
+//     margin-${side === 'left' ? 'right' : 'left'}: .5em;
+//     display: inline-flex;
+//     vertical-align: middle;
+//   `}
+// `;
 
 // TODO: If children are passed in and loading===true,
 // set the children to visibility: none and have the loading bar fill their width
@@ -63,10 +62,10 @@ const Text = ({
 //   iconSuffix,
   isLoading,
   isProcessing,
-  size = '1rem',
+  size = '1',
 
   StyledContainer = TextContainer,
-  StyledIconContainer = IconContainer,
+  // StyledIconContainer = IconContainer,
   containerProps = {},
   iconContainerProps = {},
   containerRef,
