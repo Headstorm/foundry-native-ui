@@ -14,6 +14,19 @@ export type ElevationValues = {
   opacity: number;
 };
 
+// TODO: incorporate separate font size util using user preferences
+/**
+ * Converts a rem value to pixels for the device the user is on
+ * @param {number} size - The rem value to get pixels for
+ * @param {number} [factor = 1] - The factor to scale by
+ * @returns {number} The scaled px value
+ */
+export const remToPx = (size: number, factor = 1) => {
+  if (!size) return 0;
+
+  return defaultFontSize * (size + factor * ((Layout.window.width / baselineWidth) * size - size));
+};
+
 /**
  * Calculates the values for shadows based on the provided elevation
  * @param {number} elevation - The elevation to get values for
@@ -139,18 +152,4 @@ export const getDropdownTagStyle = (
     margin-right: .25rem;
     margin-top: 1px;
   `;
-};
-
-
-// TODO: incorporate separate font size util using user preferences
-/**
- * Converts a rem value to pixels for the device the user is on
- * @param {number} size - The rem value to get pixels for
- * @param {number} [factor = 1] - The factor to scale by
- * @returns {number} The scaled px value 
- */
- export const remToPx = (size: number, factor = 1) => {
-  if (!size) return 0
-  
-  return defaultFontSize * (size + (factor * ((Layout.window.width / baselineWidth * size) - size)))
 };
