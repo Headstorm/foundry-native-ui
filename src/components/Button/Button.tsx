@@ -74,8 +74,19 @@ export const ButtonContainer: string & StyledComponentBase<any, {}, ButtonContai
 )`
   ${({ theme, disabled, elevation = 0, color, variant, feedbackType }: ButtonContainerProps) => {
     const { colors, scale } = theme;
-    const backgroundColor = getBackgroundColorFromVariant(variant, color, colors.transparent, disabled);
-    const fontColor = getFontColorFromVariant(variant, color, colors.background, colors.grayDark, disabled);
+    const backgroundColor = getBackgroundColorFromVariant(
+      variant,
+      color,
+      colors.transparent,
+      disabled,
+    );
+    const fontColor = getFontColorFromVariant(
+      variant,
+      color,
+      colors.background,
+      colors.grayDark,
+      disabled,
+    );
 
     return `
       display: flex;
