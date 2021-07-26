@@ -42,6 +42,12 @@ module.exports = {
     'no-multi-spaces': 0,
     'no-plusplus': 0,
     'no-param-reassign': 0,
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': ['error'],
+    'no-shadow': 'off',
+    '@typescript-eslint/no-shadow': ['error'],
+    'no-use-before-define': 'off', // default rule causes incorrect errors, disable
+    '@typescript-eslint/no-use-before-define': ['error'], // enable ts rule for no-use-before-define
     'object-curly-newline': 0,
     'operator-linebreak': 0,
     'padded-blocks': 1,
