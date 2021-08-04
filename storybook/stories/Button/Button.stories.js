@@ -8,6 +8,7 @@ import colors from '../../../src/enums/colors';
 import variants from '../../../src/enums/variants';
 import Button from '../../../src/components/Button';
 import CenterView from '../CenterView';
+import { mdiMessage, mdiSend } from '@mdi/js';
 
 storiesOf('Button', module)
   .addDecorator(getStory => <CenterView>{getStory()}</CenterView>)
@@ -17,8 +18,8 @@ storiesOf('Button', module)
       color={color('color', colors.primaryDark)}
       onPress={action('button-press')}
       disabled={boolean('disabled', false)}
-      iconPrefix="message"
-      iconSuffix="send"
+      iconPrefix={mdiMessage}
+      iconSuffix={mdiSend}
       isProcessing
     >
       <Text>{text('children', 'Default text')}</Text>

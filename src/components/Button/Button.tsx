@@ -24,6 +24,7 @@ import { getShadowStyle } from '../../utils/styles';
 // import { InteractionFeedbackProps } from '../InteractionFeedback/InteractionFeedback';
 import FeedbackTypes from '../../enums/feedbackTypes';
 import UnstyledIcon from '../Icon';
+import { mdiLoading } from '@mdi/js';
 
 export type ButtonContainerProps = {
   theme: FoundryContextType;
@@ -193,14 +194,14 @@ const Button = ({
         iconPrefix &&
         (typeof iconPrefix === 'string' && iconPrefix !== '' ? (
           <StyledLeftIconContainer hasContent={hasContent} ref={leftIconContainerRef}>
-            <UnstyledIcon name={iconPrefix} size={remToPx(1, scale)} />
+            <UnstyledIcon path={iconPrefix} size={`${remToPx(1, scale)}px`} />
           </StyledLeftIconContainer>
         ) : (
           <StyledLeftIconContainer ref={leftIconContainerRef}>{iconPrefix}</StyledLeftIconContainer>
         ))}
       {isProcessing && (
         <StyledLeftIconContainer hasContent={hasContent} ref={leftIconContainerRef}>
-          <UnstyledIcon name="loading" size={remToPx(1, scale)} spin={1} />
+          <UnstyledIcon path={mdiLoading} size={`${remToPx(1, scale)}px`} spin={1} />
         </StyledLeftIconContainer>
       )}
       {/* // TODO: make Text an exported subcomponent */}
@@ -208,7 +209,7 @@ const Button = ({
       {iconSuffix &&
         (typeof iconSuffix === 'string' ? (
           <StyledRightIconContainer hasContent={hasContent} ref={rightIconContainerRef}>
-            <UnstyledIcon name={iconSuffix} size={remToPx(1, scale)} />
+            <UnstyledIcon path={iconSuffix} size={`${remToPx(1, scale)}px`} />
           </StyledRightIconContainer>
         ) : (
           <StyledRightIconContainer hasContent={hasContent} ref={rightIconContainerRef}>

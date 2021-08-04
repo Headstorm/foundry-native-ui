@@ -1,17 +1,30 @@
 import * as React from 'react';
 import { Animated, Easing } from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import Svg, { Path } from 'react-native-svg';
+
+interface SVGIconProps {
+  path: string;
+  size: number | string;
+  color?: string;
+}
+
+const SVGIcon: React.FC<SVGIconProps> = ({ path, size, color = 'white' }) => {
+  return (
+    <Svg height={size} width={size} viewBox="0 0 24 24">
+      <Path fill={color} d={path} />
+    </Svg>
+  );
+};
 
 interface IconProps {
-  name: string;
-  size: number;
+  path: string;
+  size: number | string;
   color?: string;
   spin?: boolean | number;
 }
 
-const Icon: React.FC<IconProps> = ({ name, size, color = 'white', spin = false }) => {
-  // @ts-expect-error
-  const iconElement = <MaterialCommunityIcons name={name} size={size} color={color} />;
+const Icon: React.FC<IconProps> = ({ path, size, color = 'white', spin = false }) => {
+  const iconElement = <SVGIcon path={path} size={size} color={color} />;
 
   if (!spin) return iconElement;
 
@@ -25,7 +38,7 @@ const Icon: React.FC<IconProps> = ({ name, size, color = 'white', spin = false }
         easing: Easing.linear,
         useNativeDriver: true,
       }),
-    ).start(console.log);
+    ).start();
   }, [spinAnim]);
 
   const interpolatedSpinAnim = spinAnim.interpolate({
