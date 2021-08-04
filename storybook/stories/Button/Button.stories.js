@@ -20,7 +20,7 @@ storiesOf('Button', module)
       disabled={boolean('disabled', false)}
       iconPrefix={mdiMessage}
       iconSuffix={mdiSend}
-      isProcessing
+      isProcessing={boolean('isProcessing', false)}
     >
       <Text>{text('children', 'Default text')}</Text>
     </Button>
