@@ -1,5 +1,5 @@
 import React from 'react';
-import { PressableAndroidRippleConfig, Rect } from 'react-native';
+import { LayoutChangeEvent, PressableAndroidRippleConfig, Rect } from 'react-native';
 // import UnstyledIcon from '@mdi/react';
 // import { mdiLoading } from '@mdi/js';
 import styled, { StyledComponentBase } from 'styled-components/native';
@@ -170,9 +170,17 @@ const Button = ({
     theme.colors.background,
     theme.colors.grayDark,
   );
+  const [rippleRadius, setRippleRadius] = React.useState(60);
+
+  const handleLayoutChange = (event: LayoutChangeEvent) => {
+    const { width, height } = event.nativeEvent.layout;
+
+    setRippleRadius(Math.max(width, height) / 2);
+  };
+
   const rippleConfig = {
     color: fontColor,
-    radius: 60,
+    radius: rippleRadius,
     ...android_ripple,
   };
 
@@ -183,6 +191,7 @@ const Button = ({
     onPress,
     onMouseDown,
     onMouseUp,
+    onLayout: handleLayoutChange,
     elevation,
     color: containerColor,
     variant,
