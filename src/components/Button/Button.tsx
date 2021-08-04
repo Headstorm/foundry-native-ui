@@ -76,11 +76,24 @@ export const ButtonContainer: string & StyledComponentBase<any, {}, ButtonContai
 )`
   ${({ theme, disabled, elevation = 0, color, variant, feedbackType }: ButtonContainerProps) => {
     const { colors, scale } = theme;
-    const backgroundColor = getBackgroundColorFromVariant(variant, color, colors.transparent, disabled);
-    const fontColor = getFontColorFromVariant(variant, color, colors.background, colors.grayDark, disabled);
+    const backgroundColor = getBackgroundColorFromVariant(
+      variant,
+      color,
+      colors.transparent,
+      disabled,
+    );
+    const fontColor = getFontColorFromVariant(
+      variant,
+      color,
+      colors.background,
+      colors.grayDark,
+      disabled,
+    );
 
     return `
       display: flex;
+      flex-direction: row;
+      align-items: center;
       position: relative;
       font-size: ${remToPx(1, scale)}px;
       padding: ${remToPx(0.75, scale)}px ${remToPx(1, scale)}px;
@@ -90,7 +103,6 @@ export const ButtonContainer: string & StyledComponentBase<any, {}, ButtonContai
       border-width: 0px;
       color: ${fontColor};
       background-color: ${backgroundColor} !important;
-      align-items: center;
       &:hover {
         background-color: darkred;
       }
@@ -107,7 +119,6 @@ export const ButtonContainer: string & StyledComponentBase<any, {}, ButtonContai
 
 const IconContainer = styled(View)`
   height: ${remToPx(1)}px;
-  /* vertical-align: middle; */
 `;
 
 const LeftIconContainer = styled(IconContainer)`
