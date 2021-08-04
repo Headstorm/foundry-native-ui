@@ -17,6 +17,9 @@ storiesOf('Button', module)
       color={color('color', colors.primaryDark)}
       onPress={action('button-press')}
       disabled={boolean('disabled', false)}
+      iconPrefix="message"
+      iconSuffix="send"
+      isProcessing
     >
       <Text>{text('children', 'Default text')}</Text>
     </Button>

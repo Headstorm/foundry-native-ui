@@ -23,6 +23,7 @@ import { getShadowStyle } from '../../utils/styles';
 // import InteractionFeedback from '../InteractionFeedback';
 // import { InteractionFeedbackProps } from '../InteractionFeedback/InteractionFeedback';
 import FeedbackTypes from '../../enums/feedbackTypes';
+import UnstyledIcon from '../Icon';
 
 export type ButtonContainerProps = {
   theme: FoundryContextType;
@@ -103,27 +104,27 @@ export const ButtonContainer: string & StyledComponentBase<any, {}, ButtonContai
   margin-bottom: -5px;
 `; */
 
-/* const IconContainer = styled(Div)`
-  height: 1rem;
-  vertical-align: middle;
-`; */
+const IconContainer = styled(View)`
+  height: ${remToPx(1)}px;
+  /* vertical-align: middle; */
+`;
 
-/* const LeftIconContainer = styled(IconContainer)`
+const LeftIconContainer = styled(IconContainer)`
   ${({ hasContent }: { hasContent: boolean }) => `
-    ${hasContent ? 'margin-right: 0.75em;' : ''}
+    ${hasContent ? `margin-right: ${remToPx(0.75)}px;` : ''}
   `}
 `;
 
 const RightIconContainer = styled(IconContainer)`
   ${({ hasContent }: { hasContent: boolean }) => `
-    ${hasContent ? 'margin-left: 0.75em;' : ''}
+    ${hasContent ? `margin-left: ${remToPx(0.75)}px;` : ''}
   `}
-`; */
+`;
 
 const Button = ({
   StyledContainer = ButtonContainer,
-  // StyledLeftIconContainer = LeftIconContainer,
-  // StyledRightIconContainer = RightIconContainer,
+  StyledLeftIconContainer = LeftIconContainer,
+  StyledRightIconContainer = RightIconContainer,
   containerProps = {},
   iconPrefix,
   iconSuffix,
@@ -181,37 +182,39 @@ const Button = ({
     ...containerProps,
   };
 
+  const { colors, scale } = theme;
+
   const buttonContent = isLoading ? (
     // <LoadingBar ref={loadingBarRef} />
     <View />
   ) : (
     <>
-      {/* {!isProcessing &&
+      {!isProcessing &&
         iconPrefix &&
         (typeof iconPrefix === 'string' && iconPrefix !== '' ? (
           <StyledLeftIconContainer hasContent={hasContent} ref={leftIconContainerRef}>
-            <UnstyledIcon path={iconPrefix} size="1rem" />
+            <UnstyledIcon name={iconPrefix} size={remToPx(1, scale)} />
           </StyledLeftIconContainer>
         ) : (
           <StyledLeftIconContainer ref={leftIconContainerRef}>{iconPrefix}</StyledLeftIconContainer>
         ))}
       {isProcessing && (
         <StyledLeftIconContainer hasContent={hasContent} ref={leftIconContainerRef}>
-          <UnstyledIcon path={mdiLoading} size="1rem" spin={1} />
+          <UnstyledIcon name="loading" size={remToPx(1, scale)} spin={1} />
         </StyledLeftIconContainer>
-      )} */}
+      )}
       {/* // TODO: make Text an exported subcomponent */}
       <Text style={{ color: fontColor }}>{children}</Text>
-      {/* {iconSuffix &&
+      {iconSuffix &&
         (typeof iconSuffix === 'string' ? (
           <StyledRightIconContainer hasContent={hasContent} ref={rightIconContainerRef}>
-            <UnstyledIcon path={iconSuffix} size="1rem" />
+            <UnstyledIcon name={iconSuffix} size={remToPx(1, scale)} />
           </StyledRightIconContainer>
         ) : (
           <StyledRightIconContainer hasContent={hasContent} ref={rightIconContainerRef}>
             {iconSuffix}
           </StyledRightIconContainer>
-        ))} */}
+        ))}
     </>
   );
 
@@ -225,7 +228,7 @@ const Button = ({
 Button.Container = ButtonContainer;
 Button.ButtonTypes = ButtonTypes;
 // Button.LoadingBar = StyledProgress;
-// Button.LeftIconContainer = LeftIconContainer;
-// Button.RightIconContainer = RightIconContainer;
+Button.LeftIconContainer = LeftIconContainer;
+Button.RightIconContainer = RightIconContainer;
 
 export default Button;
