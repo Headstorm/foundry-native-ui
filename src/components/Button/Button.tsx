@@ -1,5 +1,5 @@
 import React from 'react';
-import { PressableAndroidRippleConfig, Rect } from 'react-native';
+import { LayoutChangeEvent, PressableAndroidRippleConfig, Rect } from 'react-native';
 // import UnstyledIcon from '@mdi/react';
 // import { mdiLoading } from '@mdi/js';
 import styled, { StyledComponentBase } from 'styled-components/native';
@@ -23,6 +23,8 @@ import { getShadowStyle } from '../../utils/styles';
 // import InteractionFeedback from '../InteractionFeedback';
 // import { InteractionFeedbackProps } from '../InteractionFeedback/InteractionFeedback';
 import FeedbackTypes from '../../enums/feedbackTypes';
+import UnstyledIcon from '../Icon';
+import { mdiLoading } from '@mdi/js';
 
 export type ButtonContainerProps = {
   theme: FoundryContextType;
@@ -90,6 +92,8 @@ export const ButtonContainer: string & StyledComponentBase<any, {}, ButtonContai
 
     return `
       display: flex;
+      flex-direction: row;
+      align-items: center;
       position: relative;
       font-size: ${remToPx(1, scale)}px;
       padding: ${remToPx(0.75, scale)}px ${remToPx(1, scale)}px;
@@ -99,7 +103,6 @@ export const ButtonContainer: string & StyledComponentBase<any, {}, ButtonContai
       border-width: 0px;
       color: ${fontColor};
       background-color: ${backgroundColor} !important;
-      align-items: center;
       &:hover {
         background-color: darkred;
       }
@@ -114,27 +117,26 @@ export const ButtonContainer: string & StyledComponentBase<any, {}, ButtonContai
   margin-bottom: -5px;
 `; */
 
-/* const IconContainer = styled(Div)`
-  height: 1rem;
-  vertical-align: middle;
-`; */
+const IconContainer = styled(View)`
+  height: ${remToPx(1)}px;
+`;
 
-/* const LeftIconContainer = styled(IconContainer)`
+const LeftIconContainer = styled(IconContainer)`
   ${({ hasContent }: { hasContent: boolean }) => `
-    ${hasContent ? 'margin-right: 0.75em;' : ''}
+    ${hasContent ? `margin-right: ${remToPx(0.75)}px;` : ''}
   `}
 `;
 
 const RightIconContainer = styled(IconContainer)`
   ${({ hasContent }: { hasContent: boolean }) => `
-    ${hasContent ? 'margin-left: 0.75em;' : ''}
+    ${hasContent ? `margin-left: ${remToPx(0.75)}px;` : ''}
   `}
-`; */
+`;
 
 const Button = ({
   StyledContainer = ButtonContainer,
-  // StyledLeftIconContainer = LeftIconContainer,
-  // StyledRightIconContainer = RightIconContainer,
+  StyledLeftIconContainer = LeftIconContainer,
+  StyledRightIconContainer = RightIconContainer,
   containerProps = {},
   iconPrefix,
   iconSuffix,
@@ -168,9 +170,17 @@ const Button = ({
     theme.colors.background,
     theme.colors.grayDark,
   );
+  const [rippleRadius, setRippleRadius] = React.useState(60);
+
+  const handleLayoutChange = (event: LayoutChangeEvent) => {
+    const { width, height } = event.nativeEvent.layout;
+
+    setRippleRadius(Math.max(width, height) / 2);
+  };
+
   const rippleConfig = {
     color: fontColor,
-    radius: 60,
+    radius: rippleRadius,
     ...android_ripple,
   };
 
@@ -181,6 +191,7 @@ const Button = ({
     onPress,
     onMouseDown,
     onMouseUp,
+    onLayout: handleLayoutChange,
     elevation,
     color: containerColor,
     variant,
@@ -192,37 +203,39 @@ const Button = ({
     ...containerProps,
   };
 
+  const { colors, scale } = theme;
+
   const buttonContent = isLoading ? (
     // <LoadingBar ref={loadingBarRef} />
     <View />
   ) : (
     <>
-      {/* {!isProcessing &&
+      {!isProcessing &&
         iconPrefix &&
         (typeof iconPrefix === 'string' && iconPrefix !== '' ? (
           <StyledLeftIconContainer hasContent={hasContent} ref={leftIconContainerRef}>
-            <UnstyledIcon path={iconPrefix} size="1rem" />
+            <UnstyledIcon path={iconPrefix} size={`${remToPx(1, scale)}px`} />
           </StyledLeftIconContainer>
         ) : (
           <StyledLeftIconContainer ref={leftIconContainerRef}>{iconPrefix}</StyledLeftIconContainer>
         ))}
       {isProcessing && (
         <StyledLeftIconContainer hasContent={hasContent} ref={leftIconContainerRef}>
-          <UnstyledIcon path={mdiLoading} size="1rem" spin={1} />
+          <UnstyledIcon path={mdiLoading} size={`${remToPx(1, scale)}px`} spin={1} />
         </StyledLeftIconContainer>
-      )} */}
+      )}
       {/* // TODO: make Text an exported subcomponent */}
       <Text style={{ color: fontColor }}>{children}</Text>
-      {/* {iconSuffix &&
+      {iconSuffix &&
         (typeof iconSuffix === 'string' ? (
           <StyledRightIconContainer hasContent={hasContent} ref={rightIconContainerRef}>
-            <UnstyledIcon path={iconSuffix} size="1rem" />
+            <UnstyledIcon path={iconSuffix} size={`${remToPx(1, scale)}px`} />
           </StyledRightIconContainer>
         ) : (
           <StyledRightIconContainer hasContent={hasContent} ref={rightIconContainerRef}>
             {iconSuffix}
           </StyledRightIconContainer>
-        ))} */}
+        ))}
     </>
   );
 
@@ -236,7 +249,7 @@ const Button = ({
 Button.Container = ButtonContainer;
 Button.ButtonTypes = ButtonTypes;
 // Button.LoadingBar = StyledProgress;
-// Button.LeftIconContainer = LeftIconContainer;
-// Button.RightIconContainer = RightIconContainer;
+Button.LeftIconContainer = LeftIconContainer;
+Button.RightIconContainer = RightIconContainer;
 
 export default Button;
