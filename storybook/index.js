@@ -1,11 +1,15 @@
 // /storybook/index.js
-import { getStorybookUI, configure } from "@storybook/react-native";
+import { getStorybookUI, configure, addDecorator } from '@storybook/react-native';
+import { withKnobs } from '@storybook/addon-knobs';
 
-import "./rn-addons";
+import './rn-addons';
+
+// enables knobs for all stories
+addDecorator(withKnobs);
 
 // import stories
 configure(() => {
-  require("./stories");
+  require('./stories');
 }, module);
 
 const StorybookUIRoot = getStorybookUI({
