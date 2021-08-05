@@ -2,6 +2,8 @@ import * as React from 'react';
 import { Animated, Easing } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 
+import { AnimatedView } from '../../baseElements';
+
 interface SVGIconProps {
   path: string;
   size: number | string;
@@ -47,9 +49,9 @@ const Icon: React.FC<IconProps> = ({ path, size, color = 'white', spin = false }
   });
 
   return (
-    <Animated.View style={[{ transform: [{ rotate: interpolatedSpinAnim }] }]}>
+    <AnimatedView style={[{ transform: [{ rotate: interpolatedSpinAnim }] }]}>
       {iconElement}
-    </Animated.View>
+    </AnimatedView>
   );
 };
 
