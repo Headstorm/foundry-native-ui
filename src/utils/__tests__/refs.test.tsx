@@ -19,12 +19,18 @@ describe('util refs', () => {
       expect(mergeRefs([empty])).toBeNull();
     });
 
+    /**
+     * @jest-environment jsdom
+     */
     it('Should apply ref object', async () => {
       render(<div ref={mergeRefs([refObj])} />);
       expect(refObj.current).toBeTruthy();
       expect(refObj.current instanceof HTMLDivElement).toBeTruthy();
     });
 
+    /**
+     * @jest-environment jsdom
+     */
     it('Should apply ref callback', async () => {
       render(<span ref={mergeRefs([refFn.refCB])} />);
       expect(refFn.ref instanceof HTMLSpanElement).toBeTruthy();

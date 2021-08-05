@@ -1,5 +1,5 @@
 import styled from 'styled-components/native';
-import { animated } from 'react-spring';
+// import { animated } from 'react-spring';
 import { withGlobalStyle } from '../context';
 
 // Use these elements over native styled.xx elements, as they apply

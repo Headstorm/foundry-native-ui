@@ -21,7 +21,80 @@
     "eject": "expo eject",
     "test": "jest --watchAll",
     "storybook": "start-storybook -p 7007",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "lint": "eslint src/**/*.tsx src/**/*.ts --ignore-pattern *.css --fix",
+    "lint-ci": "yarn run prettier:write && eslint src/**/*.tsx src/**/*.ts --ignore-pattern *.css --quiet",
+    "prettier:base": "prettier --parser typescript --single-quote",
+    "prettier:check": "yarn run prettier:base --list-different \"src/**/*.{ts,tsx}\"",
+    "prettier:write": "yarn run prettier:base --write \"src/**/*.{ts,tsx}\"",
+    "clean": "rm -rf ./dist/*",
+    "webpack": "webpack --config webpack.config.js",
+    "dts": "tsc --declaration --outDir dist/types/ --emitDeclarationOnly --declarationMap --allowJs false --checkJs false",
+    "pre-push": "yarn run lint-ci && yarn run clean && yarn run webpack && yarn run dts",
+    "semver-dryrun": "npx semantic-release -d --debug",
+    "semver-release": "npx semantic-release",
+    "commit": "npx git-cz"
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "yarn run pre-push",
+      "pre-commit": "yarn run lint"
+    }
+  },
+  "plugins": [
+    "@semantic-release/commit-analyzer",
+    "@semantic-release/release-notes-generator",
+    "@semantic-release/git",
+    [
+      "@semantic-release/npm",
+      {
+        "npmPublish": true
+      }
+    ]
+  ],
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "release": {
+    "branches": [
+      "master",
+      {
+        "name": "v1-release",
+        "prerelease": true
+      },
+      {
+        "name": "alpha",
+        "prerelease": true
+      },
+      {
+        "name": "beta",
+        "prerelease": true
+      },
+      {
+        "name": "next",
+        "prerelease": true
+      }
+    ],
+    "prepare": [
+      "@semantic-release/changelog",
+      {
+        "path": "@semantic-release/git",
+        "assets": [
+          "package.json",
+          "CHANGELOG.md",
+          "coverage"
+        ],
+        "message": "chore(release): ${nextRelease.version} [skip ci]nn${nextRelease.notes}"
+      }
+    ]
+  },
+  "pre-commit": [
+    "lint-ci"
+  ],
+  "eslintConfig": {
+    "extends": "@react-native-community"
   },
   "jest": {
     "preset": "jest-expo"
@@ -54,6 +127,9 @@
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",
+    "@react-native-community/eslint-config": "^3.0.0",
+    "@semantic-release/changelog": "^5.0.1",
+    "@semantic-release/git": "^9.0.0",
     "@storybook/addon-actions": "^5.3",
     "@storybook/addon-knobs": "^5.3",
     "@storybook/addon-links": "^5.3",
@@ -61,12 +137,24 @@
     "@storybook/addon-ondevice-knobs": "^5.3.25",
     "@storybook/react-native": "^5.3.25",
     "@storybook/react-native-server": "^5.3.23",
+    "@testing-library/react": "^12.0.0",
     "@types/react": "~16.9.35",
     "@types/react-native": "~0.63.2",
     "@types/styled-components": "^5.1.10",
     "@types/styled-components-react-native": "^5.1.1",
+    "@typescript-eslint/parser": "^4.28.3",
     "babel-loader": "^8.2.2",
+    "cz-conventional-changelog": "^3.3.0",
+    "eslint": "^7.30.0",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-plugin-import": "^2.23.4",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-react": "^7.24.0",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "husky": "^7.0.1",
     "jest-expo": "~41.0.0",
+    "react-spring": "^9.2.4",
+    "semantic-release": "^17.4.4",
     "styled-components": "^5.3.0",
     "typescript": "~4.0.0"
   },

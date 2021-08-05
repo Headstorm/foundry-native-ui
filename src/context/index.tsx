@@ -20,12 +20,12 @@ type FoundryColorsType = Record<keyof typeof colorsEnum, string>;
 export type FoundryContextType = {
   globalStyles: string;
   colors: FoundryColorsType;
-  scale: number
+  scale: number;
 };
 const defaultContextValue = {
   globalStyles: defaultGlobalStyles,
   colors: colorsEnum,
-  scale: defaultScaleFactor
+  scale: defaultScaleFactor,
   // TODO Add Foundry's "theme" to items here and pull from the ContextProvider
 };
 export const FoundryContext = React.createContext<FoundryContextType>(defaultContextValue);
@@ -34,10 +34,18 @@ export const FoundryProvider = ({
   value = defaultContextValue,
   children,
 }: {
-  value?: { globalStyles?: string; colors?: Partial<Record<keyof typeof colorsEnum, string>>, scale?: number};
+  value?: {
+    globalStyles?: string;
+    colors?: Partial<Record<keyof typeof colorsEnum, string>>;
+    scale?: number;
+  };
   children: React.ReactNode;
 }) => {
-  const { globalStyles = defaultGlobalStyles, colors = colorsEnum, scale = defaultScaleFactor } = value;
+  const {
+    globalStyles = defaultGlobalStyles,
+    colors = colorsEnum,
+    scale = defaultScaleFactor,
+  } = value;
 
   // use the default set of styles, unless we've got something to override
   const mergedStyles =
@@ -52,7 +60,7 @@ export const FoundryProvider = ({
     ...colors,
   };
   return (
-    <FoundryContext.Provider value={{ globalStyles: mergedStyles, colors: mergedColors, scale: scale }}>
+    <FoundryContext.Provider value={{ globalStyles: mergedStyles, colors: mergedColors, scale }}>
       {children}
     </FoundryContext.Provider>
   );
