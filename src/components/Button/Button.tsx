@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { LayoutChangeEvent, PressableAndroidRippleConfig, Rect } from 'react-native';
 // import UnstyledIcon from '@mdi/react';
 // import { mdiLoading } from '@mdi/js';
@@ -13,13 +13,9 @@ import { FoundryContextType, useTheme } from '../../context';
 import variants from '../../enums/variants';
 // import Progress from '../Progress/Progress';
 import { View, Button as ButtonElement, Text } from '../../baseElements';
-import {
-  getFontColorFromVariant,
-  getBackgroundColorFromVariant,
-  disabledStyles,
-} from '../../utils/color';
+import { getFontColorFromVariant, getBackgroundColorFromVariant } from '../../utils/color';
 import { SubcomponentPropsType } from '../commonTypes';
-import { getShadowStyle } from '../../utils/styles';
+import { getShadowStyle, getTextChildren } from '../../utils/styles';
 // import InteractionFeedback from '../InteractionFeedback';
 // import { InteractionFeedbackProps } from '../InteractionFeedback/InteractionFeedback';
 import FeedbackTypes from '../../enums/feedbackTypes';
@@ -36,6 +32,13 @@ export type ButtonContainerProps = {
   feedbackType: FeedbackTypes;
 };
 
+export type TextContainerProps = {
+  theme: FoundryContextType;
+  color: string;
+  variant: variants;
+  disabled: boolean;
+};
+
 export enum ButtonTypes {
   button = 'button',
   reset = 'reset',
@@ -44,14 +47,16 @@ export enum ButtonTypes {
 
 export type ButtonProps = {
   StyledContainer?: string & StyledComponentBase<any, {}, ButtonContainerProps>;
+  StyledTextContainer?: string & StyledComponentBase<any, {}, TextContainerProps>;
   StyledLeftIconContainer?: StyledComponentBase<any, {}>;
   StyledRightIconContainer?: StyledComponentBase<any, {}>;
   containerProps?: SubcomponentPropsType;
+  textContainerProps?: SubcomponentPropsType;
   iconPrefix?: string | JSX.Element;
   iconSuffix?: string | JSX.Element;
   isLoading?: boolean;
   isProcessing?: boolean;
-  children?: string;
+  children?: ReactNode[];
   elevation?: number;
   variant?: variants;
   type?: ButtonTypes;
@@ -66,6 +71,7 @@ export type ButtonProps = {
   LoadingBar?: string & StyledComponentBase<any, {}>;
   id?: string;
   containerRef?: React.RefObject<HTMLButtonElement>;
+  textContainerRef?: React.RefObject<HTMLDivElement>;
   leftIconContainerRef?: React.RefObject<HTMLDivElement>;
   rightIconContainerRef?: React.RefObject<HTMLDivElement>;
   loadingBarRef?: React.RefObject<HTMLDivElement>;
@@ -103,10 +109,21 @@ export const ButtonContainer: string & StyledComponentBase<any, {}, ButtonContai
       border-width: 0px;
       color: ${fontColor};
       background-color: ${backgroundColor} !important;
-      &:hover {
-        background-color: darkred;
-      }
-    `;
+      `;
+  }}
+`;
+
+export const TextContainer: string & StyledComponentBase<any, {}, TextContainerProps> = styled(
+  Text,
+)`
+  ${({ theme, color, variant }: TextContainerProps) => {
+    const { colors, scale } = theme;
+    const fontColor = getFontColorFromVariant(variant, color, colors.background, colors.grayDark);
+    return `
+        font-size: ${remToPx(1, scale)}px;
+        padding: 0px;
+        color: ${fontColor};
+      `;
   }}
 `;
 
@@ -135,14 +152,16 @@ const RightIconContainer = styled(IconContainer)`
 
 const Button = ({
   StyledContainer = ButtonContainer,
+  StyledTextContainer = TextContainer,
   StyledLeftIconContainer = LeftIconContainer,
   StyledRightIconContainer = RightIconContainer,
   containerProps = {},
+  textContainerProps = {},
   iconPrefix,
   iconSuffix,
   isLoading,
   isProcessing,
-  children,
+  children = [],
   elevation = 0,
   hitSlop = 6,
   android_ripple,
@@ -156,6 +175,7 @@ const Button = ({
   // LoadingBar = StyledProgress,
   id,
   containerRef,
+  textContainerRef,
   leftIconContainerRef,
   rightIconContainerRef,
   loadingBarRef,
@@ -184,6 +204,11 @@ const Button = ({
     ...android_ripple,
   };
 
+  const textChildren = getTextChildren(children);
+  // const nonTextChildren = React.Children.toArray(children).filter(child =>
+  //   !textChildren.includes(child),
+  // );
+
   // get everything we expose + anything consumer wants to send to container
   const mergedContainerProps = {
     'data-test-id': 'hsui-button',
@@ -205,6 +230,16 @@ const Button = ({
 
   const { colors, scale } = theme;
 
+  const mergedTextContainerProps = {
+    'data-test-id': 'hsui-button-text',
+    color: containerColor,
+    variant,
+    type,
+    disabled,
+    theme,
+    ...textContainerProps,
+  };
+
   const buttonContent = isLoading ? (
     // <LoadingBar ref={loadingBarRef} />
     <View />
@@ -224,8 +259,13 @@ const Button = ({
           <UnstyledIcon path={mdiLoading} size={`${remToPx(1, scale)}px`} spin={1} />
         </StyledLeftIconContainer>
       )}
-      {/* // TODO: make Text an exported subcomponent */}
-      <Text style={{ color: fontColor }}>{children}</Text>
+      {textChildren && (
+        <StyledTextContainer ref={textContainerRef} {...mergedTextContainerProps}>
+          {textChildren}
+        </StyledTextContainer>
+      )}
+      {/* TODO: decide how/if we want to support them passing in a mixture text/nonText children */}
+      {/* {nonTextChildren && <View>{nonTextChildren}</View>} */}
       {iconSuffix &&
         (typeof iconSuffix === 'string' ? (
           <StyledRightIconContainer hasContent={hasContent} ref={rightIconContainerRef}>
@@ -247,6 +287,7 @@ const Button = ({
 };
 
 Button.Container = ButtonContainer;
+Button.TextContainer = TextContainer;
 Button.ButtonTypes = ButtonTypes;
 // Button.LoadingBar = StyledProgress;
 Button.LeftIconContainer = LeftIconContainer;

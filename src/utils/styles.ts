@@ -1,4 +1,5 @@
-import { Platform } from 'react-native';
+import React, { ReactNode } from 'react';
+import { Platform, Text } from 'react-native';
 import { parseToRgb } from 'polished';
 import variants from '../enums/variants';
 import { getFontColorFromVariant } from './color';
@@ -21,11 +22,18 @@ export type ElevationValues = {
  * @param {number} [factor = 1] - The factor to scale by
  * @returns {number} The scaled px value
  */
-export const remToPx = (size: number, factor = 1) => {
-  if (!size) return 0;
+export const remToPx = (size: number, factor = 1) =>
+  defaultFontSize * (size + factor * ((Layout.window.width / baselineWidth) * size - size));
 
-  return defaultFontSize * (size + factor * ((Layout.window.width / baselineWidth) * size - size));
-};
+/**
+ * Gets all text container stylable children
+ * @param {ReactNode []} children - The children object
+ * @returns {ReactNode []} The children that are capable of being directly nested in a Text container
+ */
+export const getTextChildren = (children: ReactNode[]): ReactNode[] =>
+  React.Children.toArray(children).filter(
+    child => typeof child === 'string' || (child && child.type && child.type === Text),
+  );
 
 /**
  * Calculates the values for shadows based on the provided elevation
