@@ -2,6 +2,8 @@ import React, { ReactNode } from 'react';
 import styled from 'styled-components/native';
 
 import { BlurTint, BlurView } from 'expo-blur';
+import { BlurTint, BlurView as BlurViewBase } from 'expo-blur';
+
 import { View, Button, Modal as NativeModal } from '../../baseElements';
 import { SubcomponentPropsType, StyledSubcomponentType } from '../commonTypes';
 
@@ -10,6 +12,10 @@ const defaultOnClick = () => {};
 const Underlay = styled(Button)`
   height: 100%;
   width: 100%;
+`;
+
+const BlurView = styled(BlurViewBase)`
+  height: 100%;
 `;
 
 const Container = styled(View)<{ location: 'top' | 'center' | 'bottom' }>`
@@ -32,11 +38,13 @@ const Container = styled(View)<{ location: 'top' | 'center' | 'bottom' }>`
 export interface ModalProps {
   StyledContainer?: StyledSubcomponentType;
   StyledUnderlay?: StyledSubcomponentType;
+  StyledBlurView?: StyledSubcomponentType;
   StyledCloseButton?: StyledSubcomponentType;
   StyledCloseButtonContainer?: StyledSubcomponentType;
 
   containerProps?: SubcomponentPropsType;
   underlayProps?: SubcomponentPropsType;
+  blurViewProps?: SubcomponentPropsType;
   closeButtonProps?: SubcomponentPropsType;
   closeButtonContainerProps?: SubcomponentPropsType;
 
@@ -61,9 +69,11 @@ export interface ModalProps {
 const Modal = ({
   StyledContainer = Container,
   StyledUnderlay = Underlay,
+  StyledBlurView = BlurView,
 
   containerProps = {},
   underlayProps = {},
+  blurViewProps = {},
 
   containerRef,
   underlayRef,
@@ -78,9 +88,10 @@ const Modal = ({
 
   backgroundBlur = 0.5,
   backgroundDarkness = 'default',
-}: ModalProps): JSX.Element => {
+}: ModalProps): ReactElement => {
   const { styles: containerStyles }: { styles?: Record<string, unknown> } = containerProps;
   const { styles: underlayStyles }: { styles?: Record<string, unknown> } = underlayProps;
+  const { styles: blurViewStyles }: { styles?: Record<string, unknown> } = blurViewProps;
 
   const blurIntensity = Math.round(backgroundBlur * 100);
 
@@ -93,7 +104,12 @@ const Modal = ({
       hardwareAccelerated
     >
       {blurIntensity > 0 && (
-        <BlurView intensity={blurIntensity} tint={backgroundDarkness} style={{ height: '100%' }} />
+        <StyledBlurView
+          intensity={blurIntensity}
+          tint={backgroundDarkness}
+          {...blurViewProps}
+          style={blurViewStyles}
+        />
       )}
       <NativeModal
         animationType={animationType}
@@ -124,5 +140,7 @@ const Modal = ({
 };
 
 Modal.Underlay = Underlay;
+Modal.BlurView = BlurView;
 Modal.Container = Container;
+
 export default Modal;
