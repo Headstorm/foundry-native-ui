@@ -2,22 +2,31 @@ import React, { useState } from 'react';
 
 import { ImageBackground } from 'react-native';
 
+import styled from 'styled-components/native';
+
 import { boolean, select, number } from '@storybook/addon-knobs';
 import { action } from '@storybook/addon-actions';
 import { storiesOf } from '@storybook/react-native';
 
 import colors from '../../../src/enums/colors';
+import variants from '../../../src/enums/variants';
 import Modal from '../../../src/components/Modal';
 import Button from '../../../src/components/Button';
 import Card from '../../../src/components/Card';
 
+const StyledButtonContainer = styled(Button.Container)`
+  align-self: flex-start;
+`;
+
 const DefaultModal = () => {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleClose = () => {
     setIsOpen(false);
     action('close')();
   };
+
+  const handlePressOutside = boolean('onPressOutside function', true) ? handleClose : undefined;
 
   const buttonAttachment = select(
     'closeButtonAttachment',
@@ -30,8 +39,12 @@ const DefaultModal = () => {
       <Card elevation={1} header="Use this button to open the modal again">
         <Button
           color={colors.primaryDark}
-          StyledContainer={Button.Container}
-          onClick={() => setIsOpen(true)}
+          variant={variants.fill}
+          onPress={() => {
+            setIsOpen(true);
+            action('open')();
+          }}
+          StyledContainer={StyledButtonContainer}
         >
           Open modal
         </Button>
@@ -39,25 +52,21 @@ const DefaultModal = () => {
       {isOpen && (
         <Modal
           closeButtonAttachment={buttonAttachment}
-          backgroundDarkness={number('backgroundDarkness', 0.5, {
-            range: true,
-            min: 0,
-            max: 1,
-            step: 0.05,
-          })}
-          backgroundBlur={`${number('backgroundBlur', 0.5, {
+          backgroundDarkness={select('backgroundDarkness', ['default', 'light', 'dark'], 'dark')}
+          backgroundBlur={number('backgroundBlur', 0.5, {
             range: true,
             min: 0,
             max: 5,
             step: 0.1,
-          })}rem`}
-          onClickOutside={boolean('onClickOutside function', true) ? handleClose : undefined}
+          })}
+          onPressOutside={handlePressOutside}
           onClose={handleClose}
+          StyledContainer={StyledModalContainer}
         >
           <Card
             header="Hello world!"
             footer={
-              <Button color={colors.primaryDark} onClick={handleClose}>
+              <Button color={colors.primaryDark} onPress={handleClose}>
                 Okay...
               </Button>
             }
