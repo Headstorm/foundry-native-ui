@@ -1,7 +1,7 @@
-import React, { ReactNode } from 'react';
+import React, { ReactElement, ReactNode } from 'react';
 import styled from 'styled-components/native';
 
-import { BlurTint, BlurView } from 'expo-blur';
+import { View as NativeViewElement } from 'react-native';
 import { BlurTint, BlurView as BlurViewBase } from 'expo-blur';
 
 import { View, Button, Modal as NativeModal } from '../../baseElements';
@@ -48,9 +48,10 @@ export interface ModalProps {
   closeButtonProps?: SubcomponentPropsType;
   closeButtonContainerProps?: SubcomponentPropsType;
 
-  containerRef?: React.RefObject<HTMLDivElement>;
-  closeButtonContainerRef?: React.RefObject<HTMLDivElement>;
-  underlayRef?: React.RefObject<HTMLDivElement>;
+  containerRef?: React.RefObject<NativeViewElement>;
+  underlayRef?: React.RefObject<NativeViewElement>;
+  blurViewRef?: React.RefObject<NativeViewElement>;
+  closeButtonContainerRef?: React.RefObject<NativeViewElement>;
 
   animationType?: 'none' | 'slide' | 'fade';
   location?: 'top' | 'center' | 'bottom';
