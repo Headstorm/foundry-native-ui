@@ -12,7 +12,22 @@ const Underlay = styled(Button)`
   width: 100%;
 `;
 
-const Container = styled(View)``;
+const Container = styled(View)<{ location: 'top' | 'center' | 'bottom' }>`
+  display: flex;
+  height: 100%;
+  justify-content: ${({ location }) => {
+    switch (location) {
+      case 'top':
+        return 'flex-start';
+      case 'center':
+        return 'center';
+      case 'bottom':
+        return 'flex-end';
+      default:
+        return 'center';
+    }
+  }};
+`;
 
 export interface ModalProps {
   StyledContainer?: StyledSubcomponentType;
@@ -30,6 +45,7 @@ export interface ModalProps {
   underlayRef?: React.RefObject<HTMLDivElement>;
 
   animationType?: 'none' | 'slide' | 'fade';
+  location?: 'top' | 'center' | 'bottom';
 
   children: ReactNode;
 
@@ -53,6 +69,7 @@ const Modal = ({
   underlayRef,
 
   animationType = 'fade',
+  location = 'center',
 
   children,
 
@@ -84,7 +101,7 @@ const Modal = ({
           {...underlayProps}
           style={underlayStyles}
         >
-          <StyledContainer>{children}</StyledContainer>
+          <StyledContainer location={location}>{children}</StyledContainer>
         </StyledUnderlay>
       </BlurView>
     </NativeModal>

@@ -61,7 +61,7 @@ const DefaultModal = () => {
           })}
           onPressOutside={handlePressOutside}
           onClose={handleClose}
-          StyledContainer={StyledModalContainer}
+          location={select('location', ['top', 'center', 'bottom'], 'center')}
         >
           <Card
             header="Hello world!"
