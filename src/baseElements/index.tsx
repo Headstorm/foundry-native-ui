@@ -1,5 +1,6 @@
 import styled from 'styled-components/native';
 import { Animated } from 'react-native';
+import { BlurView as BlurViewComponent } from 'expo-blur';
 import { withGlobalStyle } from '../context';
 
 // Use these elements over native styled.xx elements, as they apply
@@ -18,3 +19,6 @@ export const Button = withGlobalStyle(styled.Pressable``); // TODO: investigate 
 
 export const AnimatedView = withGlobalStyle(styled(Animated.View)``);
 // export const AnimatedSpan = withGlobalStyle(styled(animated.span)``);
+
+export const Modal = withGlobalStyle(styled.Modal``);
+export const BlurView = withGlobalStyle(styled(BlurViewComponent));

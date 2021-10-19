@@ -1,84 +1,20 @@
-import React, { ReactNode, useEffect, useCallback } from 'react';
-import styled from 'styled-components';
-import { mdiClose } from '@mdi/js';
-import { useSpring } from 'react-spring';
-import { Portal } from 'react-portal';
+import React, { ReactNode } from 'react';
+import styled from 'styled-components/native';
 
-import variants from '../../enums/variants';
-import Button from '../Button/Button';
-import { AnimatedView } from '../../baseElements';
+import { BlurTint, BlurView } from 'expo-blur';
+import { View, Button, Modal as NativeModal } from '../../baseElements';
 import { SubcomponentPropsType, StyledSubcomponentType } from '../commonTypes';
-import { useTheme } from '../../context';
 
-const Underlay = styled(AnimatedView)`
-  ${() => `
-    height: 100%;
-    width: 100%;
+const defaultOnClick = () => {};
 
-    position: fixed;
-    top: 0;
-    left: 0;
-
-    z-index: 1000;
-  `}
+const Underlay = styled(Button)`
+  height: 100%;
+  width: 100%;
 `;
 
-const Container = styled(AnimatedView)`
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-
-  z-index: 1010;
-`;
-
-// Just so that the types can match a styled component
-const CloseButton = styled(Button)``;
-
-const CloseButtonContainer = styled(Button.Container)`
-  ${({ closeButtonAttachment }: { closeButtonAttachment: string }) => {
-    let distance;
-    let position;
-    let display = 'inline-flex'; // default display type
-
-    switch (closeButtonAttachment) {
-      case 'inside':
-        distance = '.5rem';
-        position = 'absolute';
-        break;
-      case 'outside':
-        distance = '-2rem';
-        position = 'absolute';
-        break;
-      case 'corner':
-        distance = '1rem';
-        position = 'fixed';
-        break;
-      case 'none':
-        distance = '0rem';
-        position = 'absolute';
-        display = 'none';
-        break;
-      default:
-        distance = '0rem';
-        position = 'absolute';
-        break;
-    }
-
-    return `
-      position: ${position};
-      top: ${distance};
-      right: ${distance};
-      z-index: 1011;
-      border-radius: 50%;
-      padding: .5rem;
-      display: ${display};
-    `;
-  }}
-`;
+const Container = styled(View)``;
 
 export interface ModalProps {
-  // TODO: Make string & StyledComponentBase<> its own type, also see about not using `any`
   StyledContainer?: StyledSubcomponentType;
   StyledUnderlay?: StyledSubcomponentType;
   StyledCloseButton?: StyledSubcomponentType;
@@ -93,146 +29,68 @@ export interface ModalProps {
   closeButtonContainerRef?: React.RefObject<HTMLDivElement>;
   underlayRef?: React.RefObject<HTMLDivElement>;
 
-  animationSpringConfig?: Record<string, unknown>;
+  animationType?: 'none' | 'slide' | 'fade';
 
   children: ReactNode;
 
-  onClickOutside?: () => void;
+  onPressOutside?: () => void;
   onClose?: () => void;
 
   closeButtonAttachment?: string;
-  backgroundBlur?: string;
-  backgroundDarkness?: number;
+  backgroundBlur?: number;
+  backgroundDarkness?: BlurTint;
   style?: Record<string, unknown>;
 }
 
 const Modal = ({
   StyledContainer = Container,
   StyledUnderlay = Underlay,
-  StyledCloseButton = CloseButton,
-  StyledCloseButtonContainer = CloseButtonContainer,
 
   containerProps = {},
   underlayProps = {},
-  closeButtonProps = {},
-  closeButtonContainerProps = {},
 
   containerRef,
-  closeButtonContainerRef,
   underlayRef,
 
-  animationSpringConfig = {},
+  animationType = 'fade',
 
   children,
 
-  onClickOutside = () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
-  onClose = () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
+  onPressOutside = defaultOnClick,
+  onClose = defaultOnClick,
 
-  closeButtonAttachment = 'inside',
-  backgroundBlur = '0.5rem',
-  backgroundDarkness = 0.2,
+  backgroundBlur = 0.5,
+  backgroundDarkness = 'default',
 }: ModalProps): JSX.Element => {
-  const { colors } = useTheme();
-
   const { styles: containerStyles }: { styles?: Record<string, unknown> } = containerProps;
   const { styles: underlayStyles }: { styles?: Record<string, unknown> } = underlayProps;
 
-  const { containerTransform, containerOpacity, underlayBackdropFilter } = useSpring({
-    from: {
-      containerTransform: 'translate(-50%, -25%)',
-      containerOpacity: 0,
-      underlayBackdropFilter: 'blur(0rem) brightness(1)',
-    },
-    to: {
-      containerTransform: 'translate(-50%, -50%)',
-      containerOpacity: 1,
-      underlayBackdropFilter: `blur(${backgroundBlur}) brightness(${1 - backgroundDarkness})`,
-    },
-    config: {
-      friction: 75,
-      tension: 550,
-      mass: 5,
-    },
-    ...animationSpringConfig,
-  });
-
-  const escFunction = useCallback(
-    event => {
-      if (event.keyCode === 27) {
-        onClickOutside();
-      }
-    },
-    [onClickOutside],
-  );
-
-  useEffect(() => {
-    document.addEventListener('keydown', escFunction, false);
-
-    return () => {
-      document.removeEventListener('keydown', escFunction, false);
-    };
-  }, [escFunction]);
-
   return (
-    <Portal>
-      {closeButtonAttachment === 'corner' && (
-        <StyledCloseButton
-          StyledContainer={StyledCloseButtonContainer}
-          containerProps={{
-            closeButtonAttachment,
-            ...closeButtonContainerProps,
-          }}
-          iconPrefix={mdiClose}
-          color={colors.background}
-          elevation={1}
-          variant={variants.text}
-          onClick={onClose}
-          {...closeButtonProps}
-        />
-      )}
-      <StyledContainer
-        ref={containerRef}
-        {...containerProps}
-        style={{
-          transform: containerTransform,
-          opacity: containerOpacity,
-          ...containerStyles,
-        }}
-      >
-        {children}
-        {closeButtonAttachment !== 'corner' && (
-          <StyledCloseButton
-            StyledContainer={StyledCloseButtonContainer}
-            ref={closeButtonContainerRef}
-            containerProps={{
-              closeButtonAttachment,
-              ...closeButtonContainerProps,
-            }}
-            iconPrefix={mdiClose}
-            color={closeButtonAttachment === 'inside' ? colors.grayDark : colors.background}
-            elevation={closeButtonAttachment === 'inside' ? 0 : 1}
-            variant={variants.text}
-            onClick={onClose}
-            {...closeButtonProps}
-          />
-        )}
-      </StyledContainer>
-      <StyledUnderlay
-        backgroundBlur={backgroundBlur}
-        backgroundDarkness={backgroundDarkness}
-        onClick={onClickOutside}
-        ref={underlayRef}
-        {...underlayProps}
-        style={{
-          backdropFilter: underlayBackdropFilter,
-          ...underlayStyles,
-        }}
-      />
-    </Portal>
+    <NativeModal
+      ref={containerRef}
+      {...containerProps}
+      style={containerStyles}
+      visible
+      transparent
+      animationType={animationType}
+      onRequestClose={onClose}
+      onDismiss={onClose}
+      hardwareAccelerated
+    >
+      <BlurView intensity={Math.round(backgroundBlur * 100)} tint={backgroundDarkness}>
+        <StyledUnderlay
+          onPress={onPressOutside}
+          ref={underlayRef}
+          {...underlayProps}
+          style={underlayStyles}
+        >
+          <StyledContainer>{children}</StyledContainer>
+        </StyledUnderlay>
+      </BlurView>
+    </NativeModal>
   );
 };
 
 Modal.Underlay = Underlay;
-Modal.CloseButtonContainer = CloseButtonContainer;
 Modal.Container = Container;
 export default Modal;
