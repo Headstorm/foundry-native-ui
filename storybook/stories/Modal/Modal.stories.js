@@ -28,12 +28,6 @@ const DefaultModal = () => {
 
   const handlePressOutside = boolean('onPressOutside function', true) ? handleClose : undefined;
 
-  const buttonAttachment = select(
-    'closeButtonAttachment',
-    ['inside', 'outside', 'corner'],
-    'inside',
-  );
-
   return (
     <>
       <Card elevation={1} header="Use this button to open the modal again">
@@ -51,7 +45,6 @@ const DefaultModal = () => {
       </Card>
       {isOpen && (
         <Modal
-          closeButtonAttachment={buttonAttachment}
           backgroundDarkness={select('backgroundDarkness', ['default', 'light', 'dark'], 'dark')}
           backgroundBlur={number('backgroundBlur', 0.5, {
             range: true,

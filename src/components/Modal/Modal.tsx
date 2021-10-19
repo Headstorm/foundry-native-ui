@@ -9,15 +9,6 @@ import { SubcomponentPropsType, StyledSubcomponentType } from '../commonTypes';
 
 const defaultOnClick = () => {};
 
-const Underlay = styled(Button)`
-  height: 100%;
-  width: 100%;
-`;
-
-const BlurView = styled(BlurViewBase)`
-  height: 100%;
-`;
-
 const Container = styled(View)<{ location: 'top' | 'center' | 'bottom' }>`
   display: flex;
   height: 100%;
@@ -35,23 +26,27 @@ const Container = styled(View)<{ location: 'top' | 'center' | 'bottom' }>`
   }};
 `;
 
+const Underlay = styled(Button)`
+  height: 100%;
+  width: 100%;
+`;
+
+const BlurView = styled(BlurViewBase)`
+  height: 100%;
+`;
+
 export interface ModalProps {
   StyledContainer?: StyledSubcomponentType;
   StyledUnderlay?: StyledSubcomponentType;
   StyledBlurView?: StyledSubcomponentType;
-  StyledCloseButton?: StyledSubcomponentType;
-  StyledCloseButtonContainer?: StyledSubcomponentType;
 
   containerProps?: SubcomponentPropsType;
   underlayProps?: SubcomponentPropsType;
   blurViewProps?: SubcomponentPropsType;
-  closeButtonProps?: SubcomponentPropsType;
-  closeButtonContainerProps?: SubcomponentPropsType;
 
   containerRef?: React.RefObject<NativeViewElement>;
   underlayRef?: React.RefObject<NativeViewElement>;
   blurViewRef?: React.RefObject<NativeViewElement>;
-  closeButtonContainerRef?: React.RefObject<NativeViewElement>;
 
   animationType?: 'none' | 'slide' | 'fade';
   location?: 'top' | 'center' | 'bottom';
@@ -61,7 +56,6 @@ export interface ModalProps {
   onPressOutside?: () => void;
   onClose?: () => void;
 
-  closeButtonAttachment?: string;
   backgroundBlur?: number;
   backgroundDarkness?: BlurTint;
   style?: Record<string, unknown>;
@@ -78,6 +72,7 @@ const Modal = ({
 
   containerRef,
   underlayRef,
+  blurViewRef,
 
   animationType = 'fade',
   location = 'center',
@@ -108,6 +103,7 @@ const Modal = ({
         <StyledBlurView
           intensity={blurIntensity}
           tint={backgroundDarkness}
+          ref={blurViewRef}
           {...blurViewProps}
           style={blurViewStyles}
         />
