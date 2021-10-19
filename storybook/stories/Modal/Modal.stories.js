@@ -61,6 +61,7 @@ const DefaultModal = () => {
           })}
           onPressOutside={handlePressOutside}
           onClose={handleClose}
+          animationType={select('animationType', ['none', 'slide', 'fade'], 'fade')}
           location={select('location', ['top', 'center', 'bottom'], 'center')}
         >
           <Card

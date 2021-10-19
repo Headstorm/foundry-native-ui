@@ -82,28 +82,43 @@ const Modal = ({
   const { styles: containerStyles }: { styles?: Record<string, unknown> } = containerProps;
   const { styles: underlayStyles }: { styles?: Record<string, unknown> } = underlayProps;
 
+  const blurIntensity = Math.round(backgroundBlur * 100);
+
   return (
     <NativeModal
-      ref={containerRef}
-      {...containerProps}
-      style={containerStyles}
+      animationType="fade"
       visible
       transparent
-      animationType={animationType}
       onRequestClose={onClose}
-      onDismiss={onClose}
       hardwareAccelerated
     >
-      <BlurView intensity={Math.round(backgroundBlur * 100)} tint={backgroundDarkness}>
+      {blurIntensity > 0 && (
+        <BlurView intensity={blurIntensity} tint={backgroundDarkness} style={{ height: '100%' }} />
+      )}
+      <NativeModal
+        animationType={animationType}
+        visible
+        transparent
+        onRequestClose={onClose}
+        onDismiss={onClose}
+        hardwareAccelerated
+      >
         <StyledUnderlay
           onPress={onPressOutside}
           ref={underlayRef}
           {...underlayProps}
           style={underlayStyles}
         >
-          <StyledContainer location={location}>{children}</StyledContainer>
+          <StyledContainer
+            ref={containerRef}
+            {...containerProps}
+            style={containerStyles}
+            location={location}
+          >
+            {children}
+          </StyledContainer>
         </StyledUnderlay>
-      </BlurView>
+      </NativeModal>
     </NativeModal>
   );
 };
